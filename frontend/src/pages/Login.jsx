@@ -3,6 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // Import du contexte
 
 const Login = () => {
+  const { user } = useAuth();
+
+console.log(user);
+// {
+//   id: "123e4567-e89b-12d3-a456-426614174000",
+//   email: "jean.dupont@email.com",
+//   created_at: "2024-01-15T10:30:00.000Z",
+//   confirmed_at: "2024-01-15T10:35:00.000Z",
+//   last_sign_in_at: "2024-01-20T14:22:00.000Z"
+// }
   const [formData, setFormData] = useState({
     email: '',
     password: '',

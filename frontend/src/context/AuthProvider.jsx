@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../services/supabaseClient';
 import { authService } from '../services/authService';
-import { AuthContext,useAuth } from './AuthContext';
+import { AuthContext,useAuth } from  './AuthContext';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+
 
   useEffect(() => {
     checkUser();
