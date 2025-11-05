@@ -1,47 +1,97 @@
-import { supabase } from './supabaseClient'
+// services/shopService.js
+import { supabase } from './supabaseClient';
 
 export const shopService = {
   async getAllShops() {
-    const { data, error } = await supabase
-      .from('shops')
-      .select('*')
-      .order('created_at', { ascending: false })
-    
-    if (error) throw error
-    return data
-  },
+    try {
+      const { data, error } = await supabase
+        .from('shops')
+        .select(`
+          *,
+          products (*)
+        `)
+        .order('created_at', { ascending: false });
 
-  async getShopById(id) {
-    const { data, error } = await supabase
-      .from('shops')
-      .select(`
-        *,
-        products (*)
-      `)
-      .eq('id', id)
-      .single()
-    
-    if (error) throw error
-    return data
+      if (error) throw error;
+
+      // Ajout des champs de disponibilité si non présents
+      return data.map(shop => ({
+        ...shop,
+        deliveryAvailable: shop.delivery_available !== undefined ? shop.delivery_available : true,
+        pickupAvailable: shop.pickup_available !== undefined ? shop.pickup_available : true,
+        isOpen: shop.is_open !== undefined ? shop.is_open : true
+      }));
+    } catch (error) {
+      console.error('Error fetching shops:', error);
+      throw error;
+    }
   },
 
   async getShopsByCategory(category) {
-    const { data, error } = await supabase
-      .from('shops')
-      .select('*')
-      .eq('category', category)
-    
-    if (error) throw error
-    return data
+    try {
+      const { data, error } = await supabase
+        .from('shops')
+        .select('*')
+        .eq('category', category)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      return data.map(shop => ({
+        ...shop,
+        deliveryAvailable: shop.delivery_available !== undefined ? shop.delivery_available : true,
+        pickupAvailable: shop.pickup_available !== undefined ? shop.pickup_available : true,
+        isOpen: shop.is_open !== undefined ? shop.is_open : true
+      }));
+    } catch (error) {
+      console.error('Error fetching shops by category:', error);
+      throw error;
+    }
+  },
+
+  async getShopById(id) {
+    try {
+      const { data, error } = await supabase
+        .from('shops')
+        .select(`
+          *,
+          products (*)
+        `)
+        .eq('id', id)
+        .single();
+
+      if (error) throw error;
+
+      return {
+        ...data,
+        deliveryAvailable: data.delivery_available !== undefined ? data.delivery_available : true,
+        pickupAvailable: data.pickup_available !== undefined ? data.pickup_available : true,
+        isOpen: data.is_open !== undefined ? data.is_open : true
+      };
+    } catch (error) {
+      console.error('Error fetching shop by id:', error);
+      throw error;
+    }
   },
 
   async searchShops(query) {
-    const { data, error } = await supabase
-      .from('shops')
-      .select('*')
-      .textSearch('name', query)
-    
-    if (error) throw error
-    return data
+    try {
+      const { data, error } = await supabase
+        .from('shops')
+        .select('*')
+        .textSearch('name', query);
+
+      if (error) throw error;
+
+      return data.map(shop => ({
+        ...shop,
+        deliveryAvailable: shop.delivery_available !== undefined ? shop.delivery_available : true,
+        pickupAvailable: shop.pickup_available !== undefined ? shop.pickup_available : true,
+        isOpen: shop.is_open !== undefined ? shop.is_open : true
+      }));
+    } catch (error) {
+      console.error('Error searching shops:', error);
+      throw error;
+    }
   }
-}
+};

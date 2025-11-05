@@ -10,8 +10,11 @@ import Checkout from './pages/Checkout';
 import './index.css';
 import Login from './pages/Login';
 import Register from './pages/Register'
-import { AuthProvider, useAuth } from './context/AuthProvider';
+import { AuthProvider } from './context/AuthProvider';
+import { useAuth } from './context/AuthContext';
 import { Navigate } from 'react-router-dom';
+import DashboardUser from './pages/DashboardUser';
+import { DeliveryProvider } from './context/DeliveryContext';
 
 // Pages temporaires pour le menu gauche
 const Orders = () => (
@@ -74,77 +77,74 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   return (
     <AuthProvider>
-      <CartProvider>
-        <Router>
-          {/* AJOUT DU LAYOUT ICI - il enveloppe toutes les routes */}
+      <DeliveryProvider>
+        <CartProvider>
+          <Router>
+            <Layout>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/" element={<Home />} />
 
+                {/* Routes protégées */}
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <DashboardUser/>
+                  </ProtectedRoute>
+                } />
+                <Route path="/cart" element={
+                  <ProtectedRoute>
+                    <CartPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/checkout" element={
+                  <ProtectedRoute>
+                    <Checkout />
+                  </ProtectedRoute>
+                } />
+                <Route path="/orders" element={
+                  <ProtectedRoute>
+                    <Orders />
+                  </ProtectedRoute>
+                } />
+                <Route path="/favorites" element={
+                  <ProtectedRoute>
+                    <Favorites />
+                  </ProtectedRoute>
+                } />
+                <Route path="/addresses" element={
+                  <ProtectedRoute>
+                    <Addresses />
+                  </ProtectedRoute>
+                } />
+                <Route path="/payment" element={
+                  <ProtectedRoute>
+                    <Payment />
+                  </ProtectedRoute>
+                } />
+                <Route path="/help" element={
+                  <ProtectedRoute>
+                    <Help />
+                  </ProtectedRoute>
+                } />
+                <Route path="/settings" element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                } />
 
-          <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-          </Routes>
+                {/* Routes publiques */}
+                <Route path="/shop/:id" element={<ShopDetail />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/category/:category" element={<Home />} />
 
-          <Layout>
-            
-            <Routes>
-              <Route path="/" element={<Home />} />
-
-              
-              {/* Routes protégées */}
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              } />
-              <Route path="/cart" element={
-                <ProtectedRoute>
-                  <CartPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/checkout" element={
-                <ProtectedRoute>
-                  <Checkout />
-                </ProtectedRoute>
-              } />
-              <Route path="/orders" element={
-                <ProtectedRoute>
-                  <Orders />
-                </ProtectedRoute>
-              } />
-              <Route path="/favorites" element={
-                <ProtectedRoute>
-                  <Favorites />
-                </ProtectedRoute>
-              } />
-              <Route path="/addresses" element={
-                <ProtectedRoute>
-                  <Addresses />
-                </ProtectedRoute>
-              } />
-              <Route path="/payment" element={
-                <ProtectedRoute>
-                  <Payment />
-                </ProtectedRoute>
-              } />
-              <Route path="/help" element={
-                <ProtectedRoute>
-                  <Help />
-                </ProtectedRoute>
-              } />
-              <Route path="/settings" element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              } />
-
-              {/* Routes publiques */}
-              <Route path="/shop/:id" element={<ShopDetail />} />
-              <Route path="/product/:id" element={<ProductDetail />} />
-              <Route path="/category/:category" element={<Home />} />
-            </Routes>
-          </Layout>
-        </Router>
-      </CartProvider>
+                {/* Route par défaut */}
+                <Route path="*" element={<Navigate to="/" />} />
+              </Routes>
+            </Layout>
+          </Router>
+        </CartProvider>
+      </DeliveryProvider>
     </AuthProvider>
   );
 }

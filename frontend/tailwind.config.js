@@ -3,6 +3,9 @@ export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      borderRadius: {
+        xl: '2rem',
+      },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         serif: ['Playfair Display', 'serif'],
@@ -12,6 +15,19 @@ export default {
           50: '#fdf4ff',
           500: '#a855f7',
           600: '#9333ea',
+        },
+        // ✅ AJOUTEZ CES COULEURS BLEUES
+        blue: {
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
         }
       },
       animation: {
@@ -25,7 +41,5 @@ export default {
       }
     },
   },
-  plugins: [
-    // SUPPRIMEZ la ligne avec lineClamp - c'est maintenant inclus dans Tailwind !
-  ],
+  plugins: [],
 }

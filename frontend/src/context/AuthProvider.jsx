@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../services/supabaseClient';
 import { authService } from '../services/authService';
-import { AuthContext,useAuth } from  './AuthContext';
+import { AuthContext } from './AuthContext';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
-
+  const [authLoading, setAuthLoading] = useState(false);
 
   useEffect(() => {
     checkUser();
     
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user) {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth event:', event, session);
+      
+      if (event === 'SIGNED_IN' && session?.user) {
         setUser(session.user);
-      } else {
+        // Redirection gérée par Supabase via l'option redirectTo
+      } else if (event === 'SIGNED_OUT') {
         setUser(null);
       }
       setLoading(false);
@@ -27,7 +29,11 @@ export function AuthProvider({ children }) {
   const checkUser = async () => {
     try {
       const currentUser = await authService.getCurrentUser();
-      setUser(currentUser);
+      if (currentUser) {
+        // Récupérer le profil complet si besoin
+        const profile = await authService.getUserProfile(currentUser.id);
+        setUser({ ...currentUser, profile: profile.data });
+      }
     } catch (error) {
       console.error('Erreur vérification utilisateur:', error);
     } finally {
@@ -36,22 +42,71 @@ export function AuthProvider({ children }) {
   };
 
   const login = async (email, password) => {
-  try {
-    const { data, error } = await authService.signIn(email, password);
-    if (error) throw error;
+    setAuthLoading(true);
+    try {
+      const { data, error } = await authService.signIn(email, password);
+      if (error) throw error;
+      setUser(data.user);
+      return { success: true, data };
+    } catch (error) {
+      return { success: false, error: error.message };
+    } finally {
+      setAuthLoading(false);
+    }
+  };
 
-    // Met à jour l'état user avec l'utilisateur de la réponse
-    setUser(data.user);
-    return { success: true, data };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
+  // CONNEXION GOOGLE CORRIGÉE - AVEC REDIRECTION
+  const signInWithGoogle = async () => {
+    setAuthLoading(true);
+    try {
+      const { data, error } = await authService.signInWithGoogle();
+      
+      if (error) throw error;
+      
+      // Supabase gère automatiquement la redirection OAuth
+      // via l'option redirectTo dans authService
+      return { success: true, data };
+    } catch (error) {
+      return { success: false, error: error.message };
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  // INSCRIPTION CORRIGÉE
+  const register = async (email, password, userData = {}) => {
+    setAuthLoading(true);
+    try {
+      const { data, error } = await authService.signUp(email, password, userData);
+      if (error) throw error;
+      return { success: true, data };
+    } catch (error) {
+      return { success: false, error: error.message };
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  // DÉCONNEXION
+  const logout = async () => {
+    try {
+      const { error } = await authService.signOut();
+      if (error) throw error;
+      setUser(null);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  };
 
   const value = {
     user,
     login,
-    loading
+    signInWithGoogle,
+    register,
+    logout,
+    loading,
+    authLoading
   };
 
   return (
@@ -60,5 +115,3 @@ export function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
-
-export { useAuth } from './AuthContext'; // ← Exporte useAuth depuis ce fichier

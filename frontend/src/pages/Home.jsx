@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useDelivery } from '../context/DeliveryContext';
 import ShopList from '../components/shops/ShopList';
 import { useShops } from '../hooks/useShops';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import SearchBar from '../components/common/SearchBar';
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const { shops, loading, error } = useShops(selectedCategory);
+  const [searchQuery, setSearchQuery] = useState('');
+  const { deliveryMode, deliveryAddress } = useDelivery();
+  const { user, loading: authLoading } = useAuth();
+  
+  const { shops, loading: shopsLoading, error } = useShops(selectedCategory, deliveryMode);
 
   const categories = [
     'Toutes',
@@ -19,149 +26,144 @@ const Home = () => {
     'Créations uniques'
   ];
 
-  const features = [
-    {
-      icon: '🚗',
-      title: 'Livraison Express',
-      description: 'Recevez vos articles en 30-45 minutes'
-    },
-    {
-      icon: '📍',
-      title: 'Boutiques Locales',
-      description: 'Découvrez les créateurs près de chez vous'
-    },
-    {
-      icon: '🛍️',
-      title: 'Essayer à Domicile',
-      description: 'Commandez plusieurs tailles, gardez ce qui vous plaît'
-    },
-    {
-      icon: '💳',
-      title: 'Paiement Sécurisé',
-      description: 'Paiement en ligne simple et sécurisé'
-    }
-  ];
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-blue-50 pt-20">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   if (error) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-blue-50 pt-20">
       <div className="text-center">
         <div className="text-6xl mb-4">😔</div>
-        <h2 className="text-2xl font-medium mb-4">Erreur de chargement</h2>
-        <p className="text-gray-600 max-w-md">{error}</p>
+        <h2 className="text-2xl font-bold text-blue-900 mb-4">Erreur de chargement</h2>
+        <p className="text-blue-600 max-w-md">{error}</p>
       </div>
     </div>
   );
 
   return (
-    <div className="home-page bg-white">
-      {/* Hero Section - Mode + Livraison */}
-      <section className="relative bg-gradient-to-br from-purple-600 to-blue-600 text-white py-16 md:py-20">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              StyleLocal
-              <span className="block text-yellow-300 mt-2">Livrée en 30min</span>
-            </h1>
-            <p className="text-lg md:text-xl mb-8 leading-relaxed text-purple-100">
-              Découvrez les créateurs de votre région et recevez vos articles en livraison express. 
-              
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link 
-                to="/boutiques" 
-                className="inline-flex items-center bg-yellow-400 hover:bg-yellow-300 text-purple-900 px-8 py-4 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-              >
-                🛍️ Commander maintenant
-                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-              <Link 
-                to="/comment-ca-marche" 
-                className="inline-flex items-center border-2 border-white text-white hover:bg-white hover:text-purple-600 px-6 py-3 rounded-lg font-semibold transition-all duration-300"
-              >
-                📱 Voir l'appli
-              </Link>
-            </div>
+    <div className="home-page bg-blue-50 min-h-screen pt-20">
+      {/* Hero Section - Dégradé avec VOS bleus */}
+      <section className="bg-gradient-to-br from-blue-800 to-blue-900 text-white py-16">
+        <div className="container mx-auto px-6 text-center">
+          {/* Logo et titre */}
+          <div className=" flex justify-center items-center mb-6">
+            <img 
+              src="/localstyle.png" 
+              alt="LocalStyle" 
+              className="h-16 w-16 mr-3 rounded-xl"
+            />
+            <h1 className="text-4xl md:text-5xl font-bold">LocalStyle</h1>
           </div>
-        </div>
-      </section>
 
-
-      {/* Fonctionnalités Uber Eats-like */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Mode locale, livrée instantanément
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Toute la magie de LocalStyle appliquée à la mode de créateurs
-            </p>
-          </div>
+          {/* Message de bienvenue */}
+          {user && user.id ? (
+            <>
+              <h2 className="text-2xl md:text-3xl font-semibold mb-4">
+                Bonjour {user.user_metadata?.name || user.email?.split('@')[0] || 'Utilisateur'} 👋
+              </h2>
+              <p className="text-blue-200 text-lg mb-8 max-w-2xl mx-auto">
+                {deliveryMode === 'delivery' 
+                  ? 'Découvrez les créations locales livrées chez vous'
+                  : 'Explorez les boutiques près de chez vous'
+                }
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl md:text-3xl font-semibold mb-4">
+                {deliveryMode === 'delivery' ? 'Livraison rapide' : 'Retrait en boutique'}
+              </h2>
+              <p className="text-blue-200 text-lg mb-8 max-w-2xl mx-auto">
+                {deliveryMode === 'delivery' 
+                  ? 'Vos articles préférés des créateurs locaux, livrés en 30 minutes'
+                  : 'Commandez en ligne et récupérez dans votre boutique favorite'
+                }
+              </p>
+            </>
+          )}
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="text-center p-6 bg-gray-50 rounded-2xl hover:shadow-md transition-all duration-300">
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+          {/* Barre de recherche */}
+          <div className="max-w-2xl mx-auto mb-8">
+            <SearchBar 
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder={
+                deliveryMode === 'delivery' 
+                  ? "Rechercher une boutique, un produit..." 
+                  : "Rechercher une boutique près de chez vous..."
+              }
+              className="bg-white bg-opacity-90 backdrop-blur-sm"
+            />
+          </div>
+
+          {/* Boutons d'action */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link 
+              to="/shops" 
+              className="inline-flex items-center bg-white text-blue-700 hover:bg-blue-100 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <span className="mr-2">🛍️</span>
+              Explorer les boutiques
+            </Link>
+            
+            {user && user.id ? (
+              <Link 
+                to="/dashboard" 
+                className="inline-flex items-center border-2 border-white text-white hover:bg-white hover:text-blue-700 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200"
+              >
+                <span className="mr-2">👤</span>
+                Mon compte
+              </Link>
+            ) : (
+              <Link 
+                to="/login" 
+                className="inline-flex items-center border-2 border-white text-white hover:bg-white hover:text-blue-700 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200"
+              >
+                <span className="mr-2">🔐</span>
+                Se connecter
+              </Link>
+            )}
+          </div>
+
+          {/* Indicateur de mode de livraison */}
+          <div className="mt-8 flex justify-center">
+            <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-6 py-3">
+              <div className="flex items-center space-x-2 text-sm">
+                <span className={deliveryMode === 'delivery' ? 'text-green-400' : 'text-yellow-400'}>
+                  {deliveryMode === 'delivery' ? '🚗' : '🏪'}
+                </span>
+                <span className="text-white">
+                  {deliveryMode === 'delivery' ? 'Mode livraison' : 'Mode retrait'}
+                </span>
+                <span className="text-blue-300">•</span>
+                <span className="text-white text-opacity-80">
+                  {deliveryAddress?.address || 'Sélectionnez une adresse'}
+                </span>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Comment ça marche */}
-      <section className="py-16 bg-gradient-to-r from-gray-50 to-white">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Comment ça marche ?
-            </h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Parcourir</h3>
-              <p className="text-gray-600">Découvrez les boutiques et créateurs près de chez vous</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Commander</h3>
-              <p className="text-gray-600">Choisissez vos articles et validez votre commande</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Recevoir</h3>
-              <p className="text-gray-600">Livraison express en 30-45 minutes à votre porte</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Catégories */}
-      <section className="py-16 bg-white">
+      <section className="py-8 bg-white border-b border-blue-200">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Parcourir les boutiques
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Filtrez par type de produits pour trouver exactement ce que vous cherchez
-            </p>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
+          <h3 className="text-lg font-semibold text-blue-900 mb-4 text-center">
+            Parcourir par catégorie
+          </h3>
+          <div className="flex flex-wrap justify-center gap-3">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category === 'Toutes' ? null : category)}
-                className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+                className={`px-5 py-3 rounded-full font-medium transition-all duration-200 ${
                   selectedCategory === (category === 'Toutes' ? null : category)
-                    ? 'bg-purple-600 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-purple-100 hover:text-purple-700'
+                    ? 'bg-blue-700 text-white shadow-md'
+                    : 'bg-blue-100 text-blue-800 hover:bg-blue-200 hover:shadow-sm'
                 }`}
               >
                 {category}
@@ -171,53 +173,54 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Boutiques avec livraison */}
-      <section className="py-16 bg-gray-50">
+      {/* Boutiques */}
+      <section className="py-12">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {selectedCategory ? 
-                `Boutiques ${selectedCategory} - Livraison disponible` 
-                : 'Boutiques avec livraison express'
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-blue-900 mb-3">
+              {selectedCategory 
+                ? `Boutiques ${selectedCategory}`
+                : 'Boutiques à découvrir'
               }
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              {selectedCategory ? 
-                `Commandez ${selectedCategory.toLowerCase()} et recevez en 30 minutes`
-                : 'Toutes ces boutiques proposent la livraison rapide dans votre zone'
+            <p className="text-blue-700 text-lg">
+              {deliveryMode === 'delivery' 
+                ? 'Livraison disponible dans votre zone'
+                : 'Retrait disponible en boutique'
               }
             </p>
           </div>
 
-          {loading ? (
-            <div className="flex justify-center items-center py-12">
-              <LoadingSpinner />
-            </div>
-          ) : shops && shops.length > 0 ? (
-            <div>
-              <ShopList shops={shops} />
-              <div className="text-center mt-8">
-                <div className="inline-flex items-center bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
-                  🚗 Livraison disponible dans votre zone
-                </div>
+          {shopsLoading ? (
+            <div className="flex justify-center items-center py-16">
+              <div className="text-center">
+                <LoadingSpinner size="large" />
+                <p className="text-blue-600 mt-4">Chargement des boutiques...</p>
               </div>
             </div>
+          ) : shops && shops.length > 0 ? (
+            <ShopList shops={shops} deliveryMode={deliveryMode} />
           ) : (
-            <div className="text-center py-12 bg-white rounded-2xl shadow-sm">
-              <div className="text-6xl mb-6">🏪</div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-4">
+            <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-blue-200">
+              <div className="text-6xl mb-4">
+                {deliveryMode === 'delivery' ? '🚗' : '🏪'}
+              </div>
+              <h3 className="text-xl font-semibold text-blue-900 mb-3">
                 Aucune boutique trouvée
               </h3>
-              <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                {selectedCategory 
-                  ? `Aucune boutique ${selectedCategory.toLowerCase()} avec livraison dans votre zone.`
-                  : 'Aucune boutique avec livraison disponible pour le moment.'
+              <p className="text-blue-600 mb-6 max-w-md mx-auto">
+                {deliveryMode === 'delivery'
+                  ? 'Aucune boutique ne livre dans votre zone pour le moment'
+                  : 'Aucune boutique avec retrait disponible près de chez vous'
                 }
               </p>
-              {selectedCategory && (
+              {(selectedCategory || searchQuery) && (
                 <button 
-                  onClick={() => setSelectedCategory(null)}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-300"
+                  onClick={() => {
+                    setSelectedCategory(null);
+                    setSearchQuery('');
+                  }}
+                  className="bg-blue-700 hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
                 >
                   Voir toutes les boutiques
                 </button>
@@ -227,69 +230,76 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Créateurs */}
-      <section className="py-16 bg-white border-t border-gray-200">
-        <div className="container mx-auto px-6 text-center">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Vous êtes créateur ?
-            </h2>
-            <p className="text-gray-600 mb-8 leading-relaxed">
-              Rejoignez notre plateforme et proposez la livraison express à vos clients. 
-              Augmentez vos ventes avec notre réseau de livraison.
+      {/* Section CTA pour non-connectés */}
+      {!user && (
+        <section className="py-16 bg-blue-800 text-white">
+          <div className="container mx-auto px-6 text-center">
+            <div className="flex justify-center items-center mb-6">
+              <img 
+                src="/localstyle.png" 
+                alt="LocalStyle" 
+                className="h-12 w-12 mr-3"
+              />
+              <h2 className="text-3xl font-bold">Rejoignez LocalStyle</h2>
+            </div>
+            <p className="text-blue-200 text-lg mb-8 max-w-2xl mx-auto">
+              Créez un compte gratuitement pour enregistrer vos adresses, suivre vos commandes 
+              et découvrir des boutiques personnalisées selon vos goûts.
             </p>
-            <Link 
-              to="/creer-boutique"
-              className="inline-flex items-center bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
-            >
-              🏪 Ajouter ma boutique
-              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-
-
-
-      {/* CTA Télécharger l'app */}
-      <section className="py-16 bg-gradient-to-r from-purple-700 to-blue-700 text-white">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Téléchargez l'application
-            </h2>
-            <p className="text-lg mb-8 text-purple-100 leading-relaxed max-w-2xl mx-auto">
-              Commandez en un clic, suivez votre livreur en temps réel, et recevez vos articles mode en moins de 30 minutes.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="inline-flex items-center bg-black hover:bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-300">
-                <span className="text-2xl mr-3">📱</span>
-                <div className="text-left">
-                  <div className="text-xs">Télécharger sur</div>
-                  <div className="text-lg">App Store</div>
-                </div>
-              </button>
-              <button className="inline-flex items-center bg-black hover:bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-300">
-                <span className="text-2xl mr-3">🤖</span>
-                <div className="text-left">
-                  <div className="text-xs">Disponible sur</div>
-                  <div className="text-lg">Google Play</div>
-                </div>
-              </button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                to="/register" 
+                className="bg-white text-blue-700 hover:bg-blue-100 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200"
+              >
+                Créer un compte gratuit
+              </Link>
+              <Link 
+                to="/login" 
+                className="border-2 border-white text-white hover:bg-white hover:text-blue-700 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200"
+              >
+                Se connecter
+              </Link>
+            </div>
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              <div className="text-center p-4">
+                <div className="text-2xl mb-2">🚀</div>
+                <h4 className="font-semibold mb-2">Livraison rapide</h4>
+                <p className="text-blue-300 text-sm">Recevez vos articles en 30 minutes</p>
+              </div>
+              <div className="text-center p-4">
+                <div className="text-2xl mb-2">💎</div>
+                <h4 className="font-semibold mb-2">Produits uniques</h4>
+                <p className="text-blue-300 text-sm">Découvrez des créations locales exclusives</p>
+              </div>
+              <div className="text-center p-4">
+                <div className="text-2xl mb-2">🛡️</div>
+                <h4 className="font-semibold mb-2">Paiement sécurisé</h4>
+                <p className="text-blue-300 text-sm">Transactions 100% sécurisées</p>
+              </div>
             </div>
           </div>
+        </section>
+      )}
+
+      {/* Section avant-footer */}
+      <section className="py-12 bg-white border-t border-blue-200">
+        <div className="container mx-auto px-6 text-center">
+          <h3 className="text-2xl font-bold text-blue-900 mb-4">
+            Prêt à découvrir votre prochaine trouvaille ?
+          </h3>
+          <p className="text-blue-700 mb-6 max-w-2xl mx-auto">
+            Des centaines de créateurs locaux n'attendent que vous. 
+            Soutenez l'économie de votre région tout en vous faisant plaisir.
+          </p>
+          <Link 
+            to="/shops" 
+            className="inline-flex items-center bg-blue-700 hover:bg-blue-800 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200"
+          >
+            <span className="mr-2">🎯</span>
+            Commencer à shopper
+          </Link>
         </div>
       </section>
-
-
-
-
-
-
-
     </div>
   );
 };

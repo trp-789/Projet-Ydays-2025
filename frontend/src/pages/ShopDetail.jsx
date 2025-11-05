@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useShop } from '../hooks/useShop.jsx'; // Correction : useShop au lieu de useShops
+import { useShop } from '../hooks/useShop'; // Correction : useShop au lieu de useShops
 import ProductList from '../components/products/ProductList';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 

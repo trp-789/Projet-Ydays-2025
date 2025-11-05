@@ -1,205 +1,209 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Import du contexte
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
+import { Loader2, Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
 
 const Login = () => {
-  const { user } = useAuth();
-
-console.log(user);
-// {
-//   id: "123e4567-e89b-12d3-a456-426614174000",
-//   email: "jean.dupont@email.com",
-//   created_at: "2024-01-15T10:30:00.000Z",
-//   confirmed_at: "2024-01-15T10:35:00.000Z",
-//   last_sign_in_at: "2024-01-20T14:22:00.000Z"
-// }
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    remember: false
+    email: "",
+    password: "",
+    remember: false,
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  
-  const { login, loading } = useAuth(); // Récupère la fonction login et l'état loading du contexte
+  const { login, loading, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
-    
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
     if (!formData.email) {
-      newErrors.email = 'Email requis';
+      newErrors.email = "Email requis";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Email invalide';
+      newErrors.email = "Email invalide";
     }
-    
     if (!formData.password) {
-      newErrors.password = 'Mot de passe requis';
+      newErrors.password = "Mot de passe requis";
     }
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-    
-    try {
-      const result = await login(formData.email, formData.password);
-      
-      if (result.success) {
-        navigate('/dashboard'); // Redirection vers le dashboard en cas de succès
-      } else {
-        setErrors({ submit: result.error || 'Erreur de connexion' });
-      }
-    } catch (error) {
-      setErrors({ submit: 'Erreur de connexion' });
-    }
+    const result = await login(formData.email, formData.password);
+    if (result.success) navigate("/");
+    else setErrors({ submit: result.error || "Erreur de connexion" });
+  };
+
+  const handleGoogleLogin = async () => {
+    const result = await signInWithGoogle();
+    if (!result.success)
+      setErrors({ submit: result.error || "Erreur de connexion Google" });
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        {/* Header */}
-        <div className="text-center">
-          <div className="text-4xl mb-4">🛍️</div>
-          <h2 className="text-3xl font-bold text-gray-900">
-            Connexion
-          </h2>
-          <p className="mt-2 text-gray-600">
-            Ou{' '}
-            <Link to="/register" className="text-blue-600 hover:text-blue-500 font-medium">
-              créez un compte
-            </Link>
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col justify-center items-center px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="bg-white w-full max-w-md shadow-2xl rounded-2xl p-8"
+      >
+        <div className="text-center mb-8">
+          <motion.h1
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-4xl font-extrabold text-gray-800"
+          >
+            LocalStyle 🛍️
+          </motion.h1>
+          <p className="text-gray-500 mt-2">Heureux de vous revoir 👋</p>
         </div>
 
-        {/* Formulaire */}
-        <div className="mt-8 bg-white py-8 px-6 shadow rounded-lg sm:px-10">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
+        <button
+          onClick={handleGoogleLogin}
+          disabled={loading}
+          className="w-full flex justify-center items-center gap-3 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-200 mb-6"
+        >
+          <img
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            alt="Google"
+            className="w-5 h-5"
+          />
+          Se connecter avec Google
+        </button>
+
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-200" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">Ou</span>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <div className="relative mt-1">
+              <Mail className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
               <input
-                id="email"
-                name="email"
                 type="email"
+                name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`mt-1 block w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.email ? 'border-red-500' : 'border-gray-300'
-                }`}
                 placeholder="votre@email.com"
-                required
+                className={`w-full pl-10 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 transition ${
+                  errors.email ? "border-red-500" : "border-gray-300"
+                }`}
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-              )}
             </div>
-
-            {/* Mot de passe */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Mot de passe
-              </label>
-              <div className="relative mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={formData.password}
-                  onChange={handleChange}
-                  className={`block w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="••••••••"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  {showPassword ? '🙈' : '👁️'}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
-              )}
-            </div>
-
-            {/* Erreur générale */}
-            {errors.submit && (
-              <div className="bg-red-50 border border-red-200 rounded-md p-3">
-                <p className="text-red-600 text-sm">{errors.submit}</p>
-              </div>
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-500">{errors.email}</p>
             )}
+          </div>
 
-            {/* Se souvenir de moi */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember"
-                  name="remember"
-                  type="checkbox"
-                  checked={formData.remember}
-                  onChange={handleChange}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
-                  Se souvenir de moi
-                </label>
-              </div>
-
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Mot de passe
+            </label>
+            <div className="relative mt-1">
+              <Lock className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className={`w-full pl-10 pr-10 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 transition ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                }`}
+              />
               <button
                 type="button"
-                className="text-sm text-blue-600 hover:text-blue-500"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
               >
-                Mot de passe oublié ?
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
+            {errors.password && (
+              <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+            )}
+          </div>
 
-            {/* Bouton de connexion */}
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-                  loading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                {loading ? 'Connexion...' : 'Se connecter'}
-              </button>
-            </div>
+          {errors.submit && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-md text-sm"
+            >
+              {errors.submit}
+            </motion.div>
+          )}
 
-            {/* Lien vers inscription */}
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
-                Pas encore de compte ?{' '}
-                <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
-                  S'inscrire
-                </Link>
-              </p>
-            </div>
-          </form>
+          <div className="flex items-center justify-between">
+            <label className="flex items-center gap-2 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                name="remember"
+                checked={formData.remember}
+                onChange={handleChange}
+                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              />
+              Se souvenir de moi
+            </label>
+            <button
+              type="button"
+              className="text-sm text-indigo-600 hover:text-indigo-500"
+            >
+              Mot de passe oublié ?
+            </button>
+          </div>
+
+          <motion.button
+            type="submit"
+            disabled={loading}
+            whileTap={{ scale: 0.97 }}
+            className={`w-full py-2 px-4 rounded-lg text-white font-medium flex justify-center items-center gap-2 transition ${
+              loading
+                ? "bg-indigo-400 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700"
+            }`}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin w-5 h-5" /> Connexion...
+              </>
+            ) : (
+              "Se connecter"
+            )}
+          </motion.button>
+        </form>
+
+        <div className="text-center mt-6">
+          <Link
+            to="/register"
+            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+          >
+            Pas encore de compte ? S'inscrire
+          </Link>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

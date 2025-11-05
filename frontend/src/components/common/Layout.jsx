@@ -1,15 +1,28 @@
+// components/common/Layout.jsx
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 
 const Layout = ({ children }) => {
+  const location = useLocation();
+  
+  // Liste des pages SANS header/footer
+  const noLayoutPages = ['/login', '/register', '/admin', '/checkout/confirmation'];
+  const shouldShowLayout = !noLayoutPages.includes(location.pathname);
+
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Header />
-      <main className="flex-1">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header conditionnel */}
+      {shouldShowLayout && <Header />}
+      
+      {/* Contenu principal */}
+      <main className={shouldShowLayout ? "flex-1" : "min-h-screen"}>
         {children}
       </main>
-      <Footer />
+      
+      {/* Footer conditionnel */}
+      {shouldShowLayout && <Footer />}
     </div>
   );
 };

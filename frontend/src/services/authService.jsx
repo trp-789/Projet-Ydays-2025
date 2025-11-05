@@ -48,9 +48,14 @@ export const authService = {
   signInWithGoogle: async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-    });
-    return { data, error };
-  }
+      options: {
+          redirectTo: window.location.origin + '/', // redirection après login
+        },
+      })
+      return {data,error}
+    }
+
+
+  };
 
   
-};

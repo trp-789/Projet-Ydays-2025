@@ -9,4 +9,7 @@ export function useAuth() {// fonction pour appeler le context et obtenir les do
 }
 
 // au lieu de taper use(context useContext(AuthContext), on fait juste useAuth()
+// Dans votre AuthContext.js
+
+
 
