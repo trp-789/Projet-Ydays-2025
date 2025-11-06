@@ -28,6 +28,6 @@ MICROSERVICES SHOPS, MICROSERVICES PRODUITS , MICROSERVICES PROFILES ETC ....
 BACKEND :
 
 
-![Logo Pythos](./frontend/logo.png)
+![Logo Pythos](./frontend/recap_site_localstyle.png)
 
 
