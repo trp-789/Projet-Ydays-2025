@@ -1,4 +1,4 @@
-import { supabase } from './supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 
 export const authService = {
   // Connexion email/mot de passe
@@ -11,16 +11,42 @@ export const authService = {
   },
 
   // Inscription
-  signUp: async (email, password, userData) => {
+ signUp: async (email, password, displayName = '', newsletter = false) => {
+  try {
+    email = email.trim().toLowerCase();
+    const finalDisplayName = displayName || email.split('@')[0];
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: userData // prénom, nom, etc.
+        data: {
+          display_name: finalDisplayName,
+          newsletter_subscribed: newsletter
+        }
       }
     });
-    return { data, error };
-  },
+
+    if (error) {
+      console.error('❌ Erreur Auth:', error);
+      return { success: false, error };
+    }
+
+    console.log('✅ Compte auth créé:', data.user?.id);
+supabase.auth.getUser().then(console.log)
+
+    return {
+      success: true,
+      requiresEmailConfirmation: !data.session,
+      user: data.user,
+      session: data.session
+    };
+  } catch (error) {
+    console.error('💥 Erreur inattendue:', error);
+    return { success: false, error };
+  }
+},
+
 
   // Déconnexion
   signOut: async () => {
@@ -30,8 +56,8 @@ export const authService = {
 
   // Récupérer l'utilisateur actuel
   getCurrentUser: async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    return user;
+    const { data } = await supabase.auth.getUser();
+    return data?.user ?? null;
   },
 
   // Récupérer le profil complet (table profiles)
@@ -49,13 +75,34 @@ export const authService = {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-          redirectTo: window.location.origin + '/', // redirection après login
-        },
-      })
-      return {data,error}
-    }
+        redirectTo: window.location.origin + '/', // redirection après login
+      },
+    });
+    return { data, error };
+  },
 
+  // Enregistrer le consentement utilisateur
+  recordConsent: async (userId, consentType, granted, ipAddress = null) => {
+    const { data, error } = await supabase
+      .from('user_consents')
+      .insert([
+        {
+          user_id: userId,
+          consent_type: consentType,
+          granted: granted,
+          ip_address: ipAddress
+        }
+      ]);
 
-  };
+    return { data, error };
+  },
 
-  
+  // MISE À JOUR DU PROFIL (FONCTION RGPD)
+  updateProfile: async (userId, updates) => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', userId);
+    return { data, error };
+  }
+};

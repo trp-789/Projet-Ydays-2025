@@ -7,4 +7,5 @@ const router = express.Router()
 router.use('/products', productsRouter)
 router.use('/shops', shopsRouter)
 
+
 export default router

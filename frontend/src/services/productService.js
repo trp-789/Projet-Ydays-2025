@@ -1,4 +1,4 @@
-import { supabase } from './supabaseClient'
+import { supabase } from '../lib/supabaseClient'
 
 export const productService = {
   async getProductsByShop(shopId) {
@@ -7,7 +7,7 @@ export const productService = {
       .select('*')
       .eq('shop_id', shopId)
       .order('created_at', { ascending: false })
-    
+
     if (error) throw error
     return data
   },
@@ -21,7 +21,7 @@ export const productService = {
       `)
       .eq('id', id)
       .single()
-    
+
     if (error) throw error
     return data
   }

@@ -1,0 +1,54 @@
+connexion de compte oblige quand il clique sur " commander"
+pas obliger de se connecter pour parcourire les produits 
+le mode de livraison/emprunter se fait dans le panier
+mode vendeur : compte pour lui et affichera ca page de boutique  
+
+
+
+vendeur -> compte pro ou independant 
+verification du siret pour compte pro
+non verification pour le compte independant
+modification en base de donnees
+
+supabase
+ 
+vendeur 
+ creatorName: "",
+    shopName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    siret: "",
+    location: "",
+    phone: "",
+    description: ""
+
+
+
+CLient                
+
+implementation du RGPD :
+
+Dans le formulaire d'inscription, nous avons deux cases à cocher :
+
+acceptTerms (obligatoire) pour les conditions générales et la politique de confidentialité (RGPD)
+
+newsletter (optionnel) pour recevoir des conseils et actualités par email
+
+bdd : 
+Nous allons créer 1 table pour le RGPD :
+
+user_consents pour enregistrer les consentements (obligatoire)
+
+id → Identifier chaque consentement individuellement
+
+user_id → Savoir QUI a consenti
+
+consent_type → Savoir À QUOI il a consenti
+
+granted → Savoir s'il a dit OUI ou NON
+
+consent_date → Savoir QUAND il a décidé
+
+created_at → Traçabilité technique
+

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDelivery } from '../../context/DeliveryContext';
+import { useDelivery } from '../context/DeliveryContext';
 
 const DeliveryToggle = () => {
   const { deliveryMode, setDeliveryMode } = useDelivery();

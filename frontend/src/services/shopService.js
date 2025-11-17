@@ -1,5 +1,5 @@
 // services/shopService.js
-import { supabase } from './supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 
 export const shopService = {
   async getAllShops() {

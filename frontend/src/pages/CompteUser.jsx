@@ -1,8 +1,8 @@
 // pages/DashboardUser.jsx
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import UserSidebar from '../components/common/UserSidebar';
-import UserProfile from '../components/common/UserProfile';
+import UserSidebar from '../components/UserSidebar';
+import UserProfile from '../components/UserProfile';
 
 
 const DashboardUser = () => {

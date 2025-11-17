@@ -1,6 +1,6 @@
 // components/User/UserSidebar.jsx (Version minimaliste)
 import React from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 const UserSidebar = ({ user, activeSection, setActiveSection }) => {
   const { logout } = useAuth();

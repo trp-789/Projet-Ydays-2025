@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useShop } from '../hooks/useShop';
-import ProductList from '../components/products/ProductList';
-import LoadingSpinner from '../components/common/LoadingSpinner';
+import ProductList from '../products/ProductList';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const ShopDetail = () => {
   const { id } = useParams();

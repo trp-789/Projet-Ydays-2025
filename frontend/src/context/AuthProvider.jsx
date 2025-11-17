@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../services/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 import { authService } from '../services/authService';
 import { AuthContext } from './AuthContext';
 
@@ -26,20 +26,30 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const checkUser = async () => {
-    try {
-      const currentUser = await authService.getCurrentUser();
-      if (currentUser) {
-        // Récupérer le profil complet si besoin
-        const profile = await authService.getUserProfile(currentUser.id);
-        setUser({ ...currentUser, profile: profile.data });
-      }
-    } catch (error) {
-      console.error('Erreur vérification utilisateur:', error);
-    } finally {
-      setLoading(false);
+ const checkUser = async () => {
+  try {
+    const { data } = await supabase.auth.getUser();
+    const currentUser = data?.user;
+
+    if (currentUser) {
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
+
+      setUser({
+        ...currentUser,
+        profile: profileData,
+      });
     }
-  };
+  } catch (error) {
+    console.error("Erreur vérification utilisateur:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const login = async (email, password) => {
     setAuthLoading(true);

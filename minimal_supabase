@@ -1,0 +1,41 @@
+-- =====================================================
+-- LOCALSHOP - MINIMAL DATABASE SETUP
+-- =====================================================
+
+-- Extension pour gen_random_uuid (pgcrypto)
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- Supprimer le trigger et la fonction si ils existent
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+DROP FUNCTION IF EXISTS public.handle_new_user();
+
+-- Supprimer la table profiles si elle existe
+DROP TABLE IF EXISTS public.profiles;
+
+-- Créer la table profiles
+CREATE TABLE public.profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT,
+  display_user TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Créer la fonction pour le trigger
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, email, display_user)
+  VALUES (NEW.id, NEW.email, COALESCE(NEW.raw_user_meta_data->>'display_name', 'User'));
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Créer le trigger
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Activer RLS et créer la politique
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage own profile" ON public.profiles
+FOR ALL USING (auth.uid() = id);
