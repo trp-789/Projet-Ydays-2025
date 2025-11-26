@@ -83,7 +83,6 @@ const Home = () => {
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
       >
-        {/* Hero Image - Reduced size */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
           style={{ rotateX, rotateY }}
@@ -100,16 +99,13 @@ const Home = () => {
           />
         </motion.div>
 
-        {/* Hero Content */}
         <motion.div
           className="relative z-20 text-center px-6 max-w-3xl mx-auto"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <motion.h1
-            className="text-5xl md:text-6xl font-black text-white mb-6"
-          >
+          <motion.h1 className="text-5xl md:text-6xl font-black text-white mb-6">
             LocalStyle
           </motion.h1>
           
@@ -119,9 +115,9 @@ const Home = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            {user?(
-               `Salut ${user.user_metadata?.display_name || user.email?.split('@')[0]} 👋`
-            )  : ('Streetwear Local & Authentique')}
+            {user
+              ? `Salut ${user.user_metadata?.display_name || user.email?.split('@')[0]} 👋`
+              : 'Streetwear Local & Authentique'}
           </motion.h2>
 
           <motion.p
@@ -137,7 +133,6 @@ const Home = () => {
               : 'Découvre les créateurs indépendants et leurs pièces uniques'}
           </motion.p>
 
-          {/* Search Bar */}
           <motion.div
             className="max-w-lg mx-auto mb-8"
             initial={{ opacity: 0, y: 20 }}
@@ -152,7 +147,6 @@ const Home = () => {
             />
           </motion.div>
 
-          {/* Action Buttons */}
           <motion.div
             className="flex flex-wrap justify-center gap-5"
             initial={{ opacity: 0 }}
@@ -161,10 +155,7 @@ const Home = () => {
           >
             <MotionLink
               to="/shops"
-              whileHover={{ 
-                scale: 1.05,
-                y: -2,
-              }}
+              whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.98 }}
               className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-base transition-all shadow-lg hover:shadow-xl"
             >
@@ -174,11 +165,7 @@ const Home = () => {
             {user ? (
               <MotionLink
                 to="/compte_user"
-                whileHover={{ 
-                  scale: 1.05,
-                  y: -2,
-                  backgroundColor: "rgba(255,255,255,0.15)"
-                }}
+                whileHover={{ scale: 1.05, y: -2, backgroundColor: "rgba(255,255,255,0.15)" }}
                 whileTap={{ scale: 0.98 }}
                 className="border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-base transition-all"
               >
@@ -187,11 +174,7 @@ const Home = () => {
             ) : (
               <MotionLink
                 to="/login"
-                whileHover={{ 
-                  scale: 1.05,
-                  y: -2,
-                  backgroundColor: "rgba(255,255,255,0.15)"
-                }}
+                whileHover={{ scale: 1.05, y: -2, backgroundColor: "rgba(255,255,255,0.15)" }}
                 whileTap={{ scale: 0.98 }}
                 className="border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-base transition-all"
               >
@@ -202,83 +185,60 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Pourquoi choisir LocalStyle ?</h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              La plateforme qui révolutionne votre shopping streetwear en connectant directement avec les créateurs locaux.
-            </p>
+{/* Features */}
+<section className="py-8 bg-white">
+  <div className="container mx-auto px-6">
+    <div className="text-center mb-8">
+      <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        Pourquoi choisir LocalStyle ?
+      </h2>
+      <p className="text-gray-600 text-base max-w-2xl mx-auto">
+        La plateforme qui révolutionne votre shopping streetwear en connectant directement avec les créateurs locaux.
+      </p>
+    </div>
+    
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      {[
+        { icon: '🎯', title: 'Authenticité', desc: 'Des pièces uniques et limitées directement des créateurs de votre région.' },
+        { icon: '🚀', title: 'Rapidité', desc: 'Livraison express et retrait en boutique selon vos préférences.' },
+        { icon: '💎', title: 'Exclusivité', desc: 'Accès à des collections introuvables ailleurs.' }
+      ].map((item, i) => (
+        <motion.div
+          key={i}
+          className="text-center p-4 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-all"
+          whileHover={{ y: -3 }}
+        >
+          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <span className="text-xl">{item.icon}</span>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <motion.div 
-              className="text-center p-6"
-              whileHover={{ y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🎯</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Authenticité</h3>
-              <p className="text-gray-600">
-                Des pièces uniques et limitées directement des créateurs de votre région.
-              </p>
-            </motion.div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
+          <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
 
-            <motion.div 
-              className="text-center p-6"
-              whileHover={{ y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🚀</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Rapidité</h3>
-              <p className="text-gray-600">
-                Livraison express et retrait en boutique selon vos préférences.
-              </p>
-            </motion.div>
 
-            <motion.div 
-              className="text-center p-6"
-              whileHover={{ y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <div className="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">💎</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Exclusivité</h3>
-              <p className="text-gray-600">
-                Accès à des collections qui ne sont pas disponibles dans les grandes enseignes.
-              </p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Categories Section */}
-      <section className="py-12 bg-gray-50 border-y border-gray-200">
+      {/* Parcourir & Shops combinés */}
+      <section className="py-16 bg-gradient-to-br from-blue-50 via-purple-50 to-cyan-50">
         <div className="container mx-auto px-6">
-          <motion.h3
-            className="text-2xl font-bold text-gray-900 mb-8 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            Parcourir par style
-          </motion.h3>
-          
-          <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
+
+
+          <motion.div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              {selectedCategory ? `Shops ${selectedCategory}` : 'Shops à découvrir'}
+            </h2>
+            <p className="text-gray-600 text-lg">Découvre les dernières créations locales</p>
+          </motion.div>
+
+
+          <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto mb-14">
             {categories.map((category, index) => (
               <motion.button
                 key={category}
                 onClick={() => setSelectedCategory(category === 'Toutes' ? null : category)}
-                whileHover={{ 
-                  scale: 1.08,
-                  y: -2,
-                }}
+                whileHover={{ scale: 1.08, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -294,44 +254,19 @@ const Home = () => {
               </motion.button>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Shops Section - Max 4 articles */}
-      <section className="py-16 bg-gradient-to-br from-blue-50 via-purple-50 to-cyan-50">
-        <div className="container mx-auto px-6">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {selectedCategory ? `Shops ${selectedCategory}` : 'Shops à découvrir'}
-            </h2>
-            <p className="text-gray-600 text-lg">
-              Découvre les dernières créations locales
-            </p>
-          </motion.div>
+
 
           <AnimatePresence mode="wait">
             {shopsLoading ? (
-              <motion.div
-                key="loading"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex justify-center items-center py-16"
-              >
+              <motion.div className="flex justify-center items-center py-16">
                 <LoadingSpinner size="large" />
               </motion.div>
             ) : filteredShops && filteredShops.length > 0 ? (
               <motion.div
-                key="shops-grid"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
               >
                 {filteredShops.slice(0, 4).map((shop, index) => (
                   <motion.div
@@ -340,11 +275,7 @@ const Home = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    whileHover={{ 
-                      scale: 1.05, 
-                      y: -5,
-                      boxShadow: "0 20px 40px rgba(0,0,0,0.1)"
-                    }}
+                    whileHover={{ scale: 1.05, y: -5 }}
                     className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer group"
                   >
                     <Link to={`/shop/${shop.id}`}>
@@ -367,10 +298,7 @@ const Home = () => {
                           <p className="text-blue-600 font-semibold text-base">
                             {shop.distance ? `${shop.distance} km` : '📍 Local'}
                           </p>
-                          <motion.span
-                            whileHover={{ scale: 1.2 }}
-                            className="text-xl font-bold"
-                          >
+                          <motion.span whileHover={{ scale: 1.2 }} className="text-xl font-bold">
                             →
                           </motion.span>
                         </div>
@@ -381,16 +309,10 @@ const Home = () => {
               </motion.div>
             ) : (
               <motion.div
-                key="no-shops"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
                 className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg max-w-2xl mx-auto"
               >
                 <div className="text-6xl mb-6">🔍</div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Aucun shop trouvé
-                </h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Aucun shop trouvé</h3>
                 <p className="text-gray-600 mb-8 text-lg">
                   Essaie une autre catégorie ou modifie ta recherche.
                 </p>
@@ -413,50 +335,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="text-3xl font-bold text-blue-600 mb-2">50+</div>
-              <div className="text-gray-600">Créateurs locaux</div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
-              <div className="text-3xl font-bold text-purple-600 mb-2">500+</div>
-              <div className="text-gray-600">Pièces uniques</div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="text-3xl font-bold text-cyan-600 mb-2">10+</div>
-              <div className="text-gray-600">Villes couvertes</div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-            >
-              <div className="text-3xl font-bold text-gray-600 mb-2">24h</div>
-              <div className="text-gray-600">Livraison express</div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* CREATEURS Section */}
+      {/* Créateurs Section */}
       <section className="py-20 bg-gradient-to-br from-blue-100 to-blue-200 border-t border-blue-300 text-center">
         <div className="container mx-auto px-6">
           <h3 className="text-3xl font-bold text-blue-900 mb-6">
@@ -485,8 +364,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-
     </div>
   );
 };
