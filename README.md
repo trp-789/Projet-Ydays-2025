@@ -196,8 +196,8 @@ npm start
 *(Ajouter ici vos captures d’écran ou diagrammes du projet)*
 
 Capture d'ecrans Interface Utilisateur :
-![Page d'accueil](frontend/captures_ecran/frontend1.png)
-![Panier](frontend/captures_ecran/frontend2.png)
+![frontend_page_1](frontend/captures_ecran/frontend1.png)
+![frontend_page_2](frontend/captures_ecran/frontend2.png)
 
 
 ---
