@@ -126,119 +126,62 @@ Interface d’administration simple pour visualiser la base.
 
 5. Architecture du projet
 Organisation des dossiers :
-"""
-Projet-Ydays-2025/
-├── backend/
-│   ├── .env
-│   ├── .gitignore
-│   ├── controllers/
-│   │   ├── productsController.js
-│   │   └── shopsController.js
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── README.md
-│   ├── routes/
-│   │   ├── index.js
-│   │   ├── products.js
-│   │   └── shops.js
-│   ├── server.js
-│   └── supabaseClient.js
-├── frontend/
-│   ├──  postcss.config.js
-│   ├── .env
-│   ├── .gitignore
-│   ├── diagramme BDD .svg
-│   ├── eslint.config.js
-│   ├── home_de_depart
-│   ├── index.html
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── postcss.config.js
-│   ├── public/
-│   │   └── localstyle.png
-│   ├── recap_site_localstyle.png
-│   ├── shops/
-│   │   ├── ShopCard.jsx
-│   │   └── ShopList.jsx
-│   ├── src/
-│   │   ├── App.css
-│   │   ├── App.jsx
-│   │   ├── assets/
-│   │   │   └── logo_google.jpeg
-│   │   ├── components/
-│   │   │   ├── DeliveryToggle.jsx
-│   │   │   ├── Footer.jsx
-│   │   │   ├── Header.jsx
-│   │   │   ├── Layout.jsx
-│   │   │   ├── LoadingSpinner.jsx
-│   │   │   ├── merchant.jsx/
-│   │   │   │   ├── MerchantHeader.jsx
-│   │   │   │   ├── MerchantOrderCard.jsx
-│   │   │   │   ├── MerchantProductCard.jsx
-│   │   │   │   ├── MerchantSidebar.jsx
-│   │   │   │   └── MerchantStatsCard.jsx
-│   │   │   ├── SearchBar.jsx
-│   │   │   ├── UserProfile.jsx
-│   │   │   └── UserSidebar.jsx
-│   │   ├── context/
-│   │   │   ├── AuthContext.jsx
-│   │   │   ├── AuthProvider.jsx
-│   │   │   ├── CartContext.jsx
-│   │   │   ├── CartProvider.jsx
-│   │   │   ├── DeliveryContext.jsx
-│   │   │   ├── DeliveryProvider.jsx
-│   │   │   └── merchant/
-│   │   │       └── MerchantAuthContext.jsx
-│   │   ├── hooks/
-│   │   │   ├── merchant/
-│   │   │   │   ├── useMerchantAnalytics.jsx
-│   │   │   │   ├── useMerchantOrders.jsx
-│   │   │   │   └── useMerchantProducts.jsx
-│   │   │   ├── useCart.jsx
-│   │   │   ├── useShop.jsx
-│   │   │   └── useShops.jsx
-│   │   ├── index.css
-│   │   ├── lib/
-│   │   │   └── supabaseClient.js
-│   │   ├── main.jsx
-│   │   ├── pages/
-│   │   │   ├── CartPage.jsx
-│   │   │   ├── Checkout.jsx
-│   │   │   ├── CompteUser.jsx
-│   │   │   ├── Home.jsx
-│   │   │   ├── Login.jsx
-│   │   │   ├── merchant/
-│   │   │   │   ├── AnalyticsMerchant.jsx
-│   │   │   │   ├── DashboardMerchant.jsx
-│   │   │   │   ├── HeaderMerchant.jsx
-│   │   │   │   ├── LoginMerchant.jsx
-│   │   │   │   ├── ManageProducts.jsx
-│   │   │   │   ├── ManageShop.jsx
-│   │   │   │   ├── OrdersMerchant.jsx
-│   │   │   │   ├── RegisterMerchant.jsx
-│   │   │   │   └── SIdebarMerchant.jsx
-│   │   │   ├── ProductDetail.jsx
-│   │   │   ├── Register.jsx
-│   │   │   └── ShopDetail.jsx
-│   │   ├── products/
-│   │   │   ├── ProductCard.jsx
-│   │   │   └── ProductList.jsx
-│   │   ├── routes/
-│   │   │   ├── AppRouter.jsx
-│   │   │   ├── ProtectedRoute.jsx
-│   │   │   ├── ProtectedRouteMerchant.jsx
-│   │   │   └── routesConfig.jsx
-│   │   └── services/
-│   │       ├── authService.jsx
-│   │       ├── merchant/
-│   │       │   └── merchantService.jsx
-│   │       ├── productService.js
-│   │       └── shopService.js
-│   ├── tailwind.config.js
-│   └── vite.config.js
-├── package-lock.json
-└── README.md
-"""
+```mermaid
+graph TD
+  A[Projet-Ydays-2025]
+
+  %% Backend
+  A --> B_backend[backend]
+  B_backend --> B1_env[.env]
+  B_backend --> B2_gitignore[.gitignore]
+  B_backend --> B3_controllers[controllers]
+  B3_controllers --> B31_products[productsController.js]
+  B3_controllers --> B32_shops[shopsController.js]
+  B_backend --> B4_package_lock[package-lock.json]
+  B_backend --> B5_package[package.json]
+  B_backend --> B6_readme[README.md]
+  B_backend --> B7_routes[routes]
+  B7_routes --> B71_index[index.js]
+  B7_routes --> B72_products[products.js]
+  B7_routes --> B73_shops[shops.js]
+  B_backend --> B8_server[server.js]
+  B_backend --> B9_supabase[supabaseClient.js]
+
+  %% Frontend
+  A --> C_frontend[frontend]
+  C_frontend --> C1_postcss[postcss.config.js]
+  C_frontend --> C2_env[.env]
+  C_frontend --> C3_gitignore[.gitignore]
+  C_frontend --> C4_diagram[diagramme BDD .svg]
+  C_frontend --> C5_eslint[eslint.config.js]
+  C_frontend --> C6_index[index.html]
+  C_frontend --> C7_package_lock[package-lock.json]
+  C_frontend --> C8_package[package.json]
+  C_frontend --> C9_public[public]
+  C9_public --> C91_localstyle[localstyle.png]
+  C_frontend --> C10_src[src]
+  C10_src --> C101_App[App.jsx]
+  C10_src --> C102_App_css[App.css]
+  C10_src --> C103_assets[assets]
+  C103_assets --> C1031_logo[logo_google.jpeg]
+  C10_src --> C104_components[components]
+  C104_components --> C1041_Footer[Footer.jsx]
+  C104_components --> C1042_Header[Header.jsx]
+  C104_components --> C1043_Layout[Layout.jsx]
+  C10_src --> C105_pages[pages]
+  C105_pages --> C1051_Home[Home.jsx]
+  C105_pages --> C1052_Login[Login.jsx]
+  C105_pages --> C1053_Register[Register.jsx]
+  C10_src --> C106_context[context]
+  C10_src --> C107_hooks[hooks]
+  C10_src --> C108_lib[lib]
+  C108_lib --> C1081_supabaseClient[supabaseClient.js]
+  C_frontend --> C11_tailwind[tailwind.config.js]
+  C_frontend --> C12_vite[vite.config.js]
+
+  %% Racine README
+  A --> D_readme[README.md]
+
 
 6. Lancement du projet
 Côté Front-end :
