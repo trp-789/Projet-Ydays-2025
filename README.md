@@ -1,37 +1,51 @@
 # Projet Ydays 2025 – Plateforme E-commerce Locale
 
+## Sommaire
+- [1. Présentation du projet](#1-présentation-du-projet)
+- [2. Objectifs du projet](#2-objectifs-du-projet)
+- [3. Stack technique](#3-stack-technique)
+- [4. Architecture du projet](#4-architecture-du-projet)
+- [5. Lancement du projet](#5-lancement-du-projet)
+- [6. Illustration](#6-illustration)
+- [7. Évolutions possibles](#7-évolutions-possibles)
+
+---
+
 ## 1. Présentation du projet
 
-Le projet **Ydays 2025** a pour objectif de développer une **plateforme e-commerce locale** permettant aux commerçants et artisans d’une région de vendre leurs produits en ligne tout en favorisant le commerce de proximité.
+Le projet **Ydays 2025** a pour objectif de développer une **plateforme e-commerce locale** permettant aux commerçants et artisans d’une région de vendre leurs produits en ligne tout en favorisant le commerce de proximité.  
 L’application doit être rapide, moderne, responsive et simple d’utilisation, pour les utilisateurs comme pour les administrateurs.
+
+---
 
 ## 2. Objectifs du projet
 
-* Créer une application web complète (front-end et back-end).
-* Permettre la consultation, l’ajout au panier et l’achat de produits locaux.
-* Mettre en avant la proximité géographique entre acheteurs et commerçants.
-* Fournir une interface ergonomique et fluide adaptée à tous les écrans.
-* Garantir la sécurité et la fiabilité des données des utilisateurs.
-* Mise en place du système de coursier similaire à Uber Eats.
+* Créer une application web complète (front-end et back-end).  
+* Permettre la consultation, l’ajout au panier et l’achat de produits locaux.  
+* Mettre en avant la proximité géographique entre acheteurs et commerçants.  
+* Fournir une interface ergonomique et fluide adaptée à tous les écrans.  
+* Garantir la sécurité et la fiabilité des données des utilisateurs.  
+* Mise en place du système du coursier (type Uber Eats).  
 
-## 3. Stack technique et choix du projet
+---
 
-Le projet **Ydays 2025** utilise des technologies modernes et éprouvées pour le développement web, permettant de créer une application rapide, réactive et sécurisée.
+## 3. Stack technique
 
-**Front-end :** React avec Tailwind CSS
-**Back-end :** Node.js (Express.js) avec Supabase pour la base de données et l’authentification
+**Front-end :** React avec Tailwind CSS  
+**Back-end :** Node.js (Express.js) avec Supabase pour la base de données et l’authentification  
 
-### Explication et justification des technologies
+### Explications des technologies
 
-* **React :** Framework JavaScript moderne pour créer des interfaces modulaires et dynamiques. Permet des applications monopage (SPA) fluides. Certains membres du groupe ont déjà utilisé React sur des projets personnels, ce qui facilite la mise en place et l’adoption. D’autres membres voient ce projet comme une opportunité d’apprendre une nouvelle technologie moderne.
+* **React :** Framework JavaScript moderne pour créer des interfaces utilisateurs dynamiques et modulaires. Permet de créer des Single Page Applications (SPA) rapides.  
+* **Tailwind CSS :** Framework CSS utilitaire qui simplifie le design et assure une cohérence visuelle rapide et maintenable.  
+* **Node.js / Express.js :** Serveur JavaScript rapide et scalable, facile à connecter aux bases de données et aux API.  
+* **Supabase :** Base de données PostgreSQL avec API et authentification intégrées, simplifiant la gestion des utilisateurs et des données.  
 
-* **Tailwind CSS :** Framework CSS utilitaire permettant de styliser rapidement l’interface et de maintenir une cohérence visuelle sur tout le projet. Compatible avec React, il accélère le développement du design et maintient le code lisible.
+### Choix technologiques
 
-* **Node.js / Express.js :** Serveur back-end performant et scalable, facile à connecter aux bases de données et API. L’utilisation de JavaScript sur l’ensemble du projet simplifie la collaboration et profite de l’expérience passée du groupe sur Node.js/Express.
+Nous avons choisi ces technologies car elles sont modernes, performantes et permettent de travailler avec un seul langage (JavaScript) sur le front-end et le back-end. L’équipe a déjà une expérience préalable avec React et Node.js, ce qui facilite le développement collaboratif et la maintenance du projet.
 
-* **Supabase :** Base de données PostgreSQL avec API et authentification intégrées, simplifiant la gestion des utilisateurs et des données, avec des fonctionnalités temps réel. Déjà utilisée dans un projet précédent par le groupe, elle permet une mise en place rapide et fiable.
-
-**En résumé :** Ces technologies combinent performance, rapidité de développement et expérience utilisateur optimale. Le choix a été motivé par l’expérience existante du groupe et l’envie d’apprendre ensemble de nouvelles technologies.
+---
 
 ## 4. Architecture du projet
 
@@ -150,6 +164,8 @@ Projet-Ydays-2025/
 └── README.md
 ```
 
+---
+
 ## 5. Lancement du projet
 
 **Côté Front-end :**
@@ -168,14 +184,18 @@ npm install
 npm start
 ```
 
+---
+
 ## 6. Illustration
 
-*(À compléter avec captures d’écran ou diagrammes)*
+*(Ajouter ici vos captures d’écran ou diagrammes du projet)*
+
+---
 
 ## 7. Évolutions possibles
 
-* Système de paiement sécurisé (Stripe).
-* Filtre géographique pour afficher les commerces proches.
-* Application mobile avec React Native.
+* Système de paiement sécurisé (Stripe).  
+* Filtre géographique pour afficher les commerces proches.  
+* Application mobile avec React Native.  
 * Tableau de bord administrateur pour la gestion des stocks et commandes.
 
