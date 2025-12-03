@@ -1,6 +1,8 @@
 
 
 Projet Ydays 2025 – Plateforme E-commerce Locale
+
+
 1. Présentation du projet
 
 Le projet Ydays 2025 a pour objectif de développer une plateforme e-commerce locale permettant aux commerçants et artisans d’une région de vendre leurs produits en ligne tout en favorisant le commerce de proximité.
@@ -125,22 +127,117 @@ Interface d’administration simple pour visualiser la base.
 5. Architecture du projet
 Organisation des dossiers :
 Projet-Ydays-2025/
-│
-├── frontend/                # Application React + Tailwind
-│   ├── src/
-│   │   ├── components/      # Composants réutilisables
-│   │   ├── pages/           # Pages principales (Accueil, Produits, Panier, etc.)
-│   │   ├── services/        # Appels API vers Supabase
-│   │   └── App.jsx
-│   └── package.json
-│
-├── backend/                 # Serveur Node.js
-│   ├── index.js
-│   ├── routes/
+├── backend/
+│   ├── .env
+│   ├── .gitignore
 │   ├── controllers/
-│   └── package.json
-│
+│   │   ├── productsController.js
+│   │   └── shopsController.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── README.md
+│   ├── routes/
+│   │   ├── index.js
+│   │   ├── products.js
+│   │   └── shops.js
+│   ├── server.js
+│   └── supabaseClient.js
+├── frontend/
+│   ├──  postcss.config.js
+│   ├── .env
+│   ├── .gitignore
+│   ├── diagramme BDD .svg
+│   ├── eslint.config.js
+│   ├── home_de_depart
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public/
+│   │   └── localstyle.png
+│   ├── recap_site_localstyle.png
+│   ├── shops/
+│   │   ├── ShopCard.jsx
+│   │   └── ShopList.jsx
+│   ├── src/
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── assets/
+│   │   │   └── logo_google.jpeg
+│   │   ├── components/
+│   │   │   ├── DeliveryToggle.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── Header.jsx
+│   │   │   ├── Layout.jsx
+│   │   │   ├── LoadingSpinner.jsx
+│   │   │   ├── merchant.jsx/
+│   │   │   │   ├── MerchantHeader.jsx
+│   │   │   │   ├── MerchantOrderCard.jsx
+│   │   │   │   ├── MerchantProductCard.jsx
+│   │   │   │   ├── MerchantSidebar.jsx
+│   │   │   │   └── MerchantStatsCard.jsx
+│   │   │   ├── SearchBar.jsx
+│   │   │   ├── UserProfile.jsx
+│   │   │   └── UserSidebar.jsx
+│   │   ├── context/
+│   │   │   ├── AuthContext.jsx
+│   │   │   ├── AuthProvider.jsx
+│   │   │   ├── CartContext.jsx
+│   │   │   ├── CartProvider.jsx
+│   │   │   ├── DeliveryContext.jsx
+│   │   │   ├── DeliveryProvider.jsx
+│   │   │   └── merchant/
+│   │   │       └── MerchantAuthContext.jsx
+│   │   ├── hooks/
+│   │   │   ├── merchant/
+│   │   │   │   ├── useMerchantAnalytics.jsx
+│   │   │   │   ├── useMerchantOrders.jsx
+│   │   │   │   └── useMerchantProducts.jsx
+│   │   │   ├── useCart.jsx
+│   │   │   ├── useShop.jsx
+│   │   │   └── useShops.jsx
+│   │   ├── index.css
+│   │   ├── lib/
+│   │   │   └── supabaseClient.js
+│   │   ├── main.jsx
+│   │   ├── pages/
+│   │   │   ├── CartPage.jsx
+│   │   │   ├── Checkout.jsx
+│   │   │   ├── CompteUser.jsx
+│   │   │   ├── Home.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── merchant/
+│   │   │   │   ├── AnalyticsMerchant.jsx
+│   │   │   │   ├── DashboardMerchant.jsx
+│   │   │   │   ├── HeaderMerchant.jsx
+│   │   │   │   ├── LoginMerchant.jsx
+│   │   │   │   ├── ManageProducts.jsx
+│   │   │   │   ├── ManageShop.jsx
+│   │   │   │   ├── OrdersMerchant.jsx
+│   │   │   │   ├── RegisterMerchant.jsx
+│   │   │   │   └── SIdebarMerchant.jsx
+│   │   │   ├── ProductDetail.jsx
+│   │   │   ├── Register.jsx
+│   │   │   └── ShopDetail.jsx
+│   │   ├── products/
+│   │   │   ├── ProductCard.jsx
+│   │   │   └── ProductList.jsx
+│   │   ├── routes/
+│   │   │   ├── AppRouter.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   ├── ProtectedRouteMerchant.jsx
+│   │   │   └── routesConfig.jsx
+│   │   └── services/
+│   │       ├── authService.jsx
+│   │       ├── merchant/
+│   │       │   └── merchantService.jsx
+│   │       ├── productService.js
+│   │       └── shopService.js
+│   ├── tailwind.config.js
+│   └── vite.config.js
+├── package-lock.json
 └── README.md
+
 
 6. Lancement du projet
 Côté Front-end :
