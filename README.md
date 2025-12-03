@@ -12,18 +12,26 @@ L’application doit être rapide, moderne, responsive et simple d’utilisation
 * Mettre en avant la proximité géographique entre acheteurs et commerçants.
 * Fournir une interface ergonomique et fluide adaptée à tous les écrans.
 * Garantir la sécurité et la fiabilité des données des utilisateurs.
+* Mise en place du système de coursier similaire à Uber Eats.
 
-## 3. Stack technique
+## 3. Stack technique et choix du projet
+
+Le projet **Ydays 2025** utilise des technologies modernes et éprouvées pour le développement web, permettant de créer une application rapide, réactive et sécurisée.
 
 **Front-end :** React avec Tailwind CSS
 **Back-end :** Node.js (Express.js) avec Supabase pour la base de données et l’authentification
 
-### Explication simple des technologies
+### Explication et justification des technologies
 
-* **React :** Framework JavaScript moderne pour créer des interfaces utilisateurs dynamiques et modulaires. Permet des Single Page Applications (SPA) rapides.
-* **Tailwind CSS :** Framework CSS utilitaire qui simplifie le design et assure une cohérence visuelle rapide et maintenable.
-* **Node.js / Express.js :** Serveur JavaScript rapide et scalable, facile à connecter aux bases de données et API.
-* **Supabase :** Base de données PostgreSQL avec API et authentification intégrées, simplifiant la gestion des utilisateurs et des données.
+* **React :** Framework JavaScript moderne pour créer des interfaces modulaires et dynamiques. Permet des applications monopage (SPA) fluides. Certains membres du groupe ont déjà utilisé React sur des projets personnels, ce qui facilite la mise en place et l’adoption. D’autres membres voient ce projet comme une opportunité d’apprendre une nouvelle technologie moderne.
+
+* **Tailwind CSS :** Framework CSS utilitaire permettant de styliser rapidement l’interface et de maintenir une cohérence visuelle sur tout le projet. Compatible avec React, il accélère le développement du design et maintient le code lisible.
+
+* **Node.js / Express.js :** Serveur back-end performant et scalable, facile à connecter aux bases de données et API. L’utilisation de JavaScript sur l’ensemble du projet simplifie la collaboration et profite de l’expérience passée du groupe sur Node.js/Express.
+
+* **Supabase :** Base de données PostgreSQL avec API et authentification intégrées, simplifiant la gestion des utilisateurs et des données, avec des fonctionnalités temps réel. Déjà utilisée dans un projet précédent par le groupe, elle permet une mise en place rapide et fiable.
+
+**En résumé :** Ces technologies combinent performance, rapidité de développement et expérience utilisateur optimale. Le choix a été motivé par l’expérience existante du groupe et l’envie d’apprendre ensemble de nouvelles technologies.
 
 ## 4. Architecture du projet
 
@@ -162,8 +170,7 @@ npm start
 
 ## 6. Illustration
 
-* Diagramme BDD : `frontend/diagramme_BDD.svg`
-* Aperçu site local : `frontend/recap_site_localstyle.png`
+*(À compléter avec captures d’écran ou diagrammes)*
 
 ## 7. Évolutions possibles
 
