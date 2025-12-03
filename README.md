@@ -253,7 +253,7 @@ graph TD
 
   %% Racine README
   A --> D_readme["README.md"]
-
+'''
 
 6. Lancement du projet
 Côté Front-end :
