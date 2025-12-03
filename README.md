@@ -36,14 +36,17 @@ L’application doit être rapide, moderne, responsive et simple d’utilisation
 
 ### Explications des technologies
 
-* **React :** Framework JavaScript moderne pour créer des interfaces utilisateurs dynamiques et modulaires. Permet de créer des Single Page Applications (SPA) rapides.  
-* **Tailwind CSS :** Framework CSS utilitaire qui simplifie le design et assure une cohérence visuelle rapide et maintenable.  
+* **React :** Framework JavaScript moderne pour créer des interfaces utilisateurs dynamiques et modulaires, idéal pour les Single Page Applications (SPA).  
+  Nous avons choisi React pour ce projet afin de relever un défi collectif : un membre du groupe a déjà des notions sur ce framework, tandis qu’un autre est débutant. Cela nous permet de renforcer nos compétences tout en utilisant une technologie de plus en plus répandue dans le développement web.
+
+* **Tailwind CSS :** Framework CSS utilitaire qui simplifie le design et assure une cohérence visuelle rapide et facile à maintenir. Il permet de créer des interfaces modernes sans écrire de longues feuilles de style.
+
 * **Node.js / Express.js :** Serveur JavaScript rapide et scalable, facile à connecter aux bases de données et aux API.  
-* **Supabase :** Base de données PostgreSQL avec API et authentification intégrées, simplifiant la gestion des utilisateurs et des données.  
+  Node.js a été choisi par préférence du groupe (Frédéric et Jean), car nous avons déjà une expérience préalable avec ce framework et il s’intègre facilement avec React et Supabase.
 
-### Choix technologiques
+* **Supabase :** Base de données PostgreSQL avec API et authentification intégrées, qui simplifie la gestion des utilisateurs et des données.  
+  Cette solution moderne est efficace pour le back-end et l’authentification. Les membres du groupe l’ont déjà utilisée dans des projets précédents, ce qui assure une mise en œuvre rapide et sécurisée.
 
-Nous avons choisi ces technologies car elles sont modernes, performantes et permettent de travailler avec un seul langage (JavaScript) sur le front-end et le back-end. L’équipe a déjà une expérience préalable avec React et Node.js, ce qui facilite le développement collaboratif et la maintenance du projet.
 
 ---
 
