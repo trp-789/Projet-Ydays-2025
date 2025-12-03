@@ -129,131 +129,119 @@ Organisation des dossiers :
 
 ## 5. Architecture du projet
 
-```mermaid
-graph TD
-  A[Projet_Ydays_2025]
+```text
+Projet-Ydays-2025/
+├── backend/
+│   ├── .env
+│   ├── .gitignore
+│   ├── controllers/
+│   │   ├── productsController.js
+│   │   └── shopsController.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── README.md
+│   ├── routes/
+│   │   ├── index.js
+│   │   ├── products.js
+│   │   └── shops.js
+│   ├── server.js
+│   └── supabaseClient.js
+├── frontend/
+│   ├──  postcss.config.js
+│   ├── .env
+│   ├── .gitignore
+│   ├── diagramme BDD .svg
+│   ├── eslint.config.js
+│   ├── home_de_depart
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public/
+│   │   └── localstyle.png
+│   ├── recap_site_localstyle.png
+│   ├── shops/
+│   │   ├── ShopCard.jsx
+│   │   └── ShopList.jsx
+│   ├── src/
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── assets/
+│   │   │   └── logo_google.jpeg
+│   │   ├── components/
+│   │   │   ├── DeliveryToggle.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── Header.jsx
+│   │   │   ├── Layout.jsx
+│   │   │   ├── LoadingSpinner.jsx
+│   │   │   ├── merchant.jsx/
+│   │   │   │   ├── MerchantHeader.jsx
+│   │   │   │   ├── MerchantOrderCard.jsx
+│   │   │   │   ├── MerchantProductCard.jsx
+│   │   │   │   ├── MerchantSidebar.jsx
+│   │   │   │   └── MerchantStatsCard.jsx
+│   │   │   ├── SearchBar.jsx
+│   │   │   ├── UserProfile.jsx
+│   │   │   └── UserSidebar.jsx
+│   │   ├── context/
+│   │   │   ├── AuthContext.jsx
+│   │   │   ├── AuthProvider.jsx
+│   │   │   ├── CartContext.jsx
+│   │   │   ├── CartProvider.jsx
+│   │   │   ├── DeliveryContext.jsx
+│   │   │   ├── DeliveryProvider.jsx
+│   │   │   └── merchant/
+│   │   │       └── MerchantAuthContext.jsx
+│   │   ├── hooks/
+│   │   │   ├── merchant/
+│   │   │   │   ├── useMerchantAnalytics.jsx
+│   │   │   │   ├── useMerchantOrders.jsx
+│   │   │   │   └── useMerchantProducts.jsx
+│   │   │   ├── useCart.jsx
+│   │   │   ├── useShop.jsx
+│   │   │   └── useShops.jsx
+│   │   ├── index.css
+│   │   ├── lib/
+│   │   │   └── supabaseClient.js
+│   │   ├── main.jsx
+│   │   ├── pages/
+│   │   │   ├── CartPage.jsx
+│   │   │   ├── Checkout.jsx
+│   │   │   ├── CompteUser.jsx
+│   │   │   ├── Home.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── merchant/
+│   │   │   │   ├── AnalyticsMerchant.jsx
+│   │   │   │   ├── DashboardMerchant.jsx
+│   │   │   │   ├── HeaderMerchant.jsx
+│   │   │   │   ├── LoginMerchant.jsx
+│   │   │   │   ├── ManageProducts.jsx
+│   │   │   │   ├── ManageShop.jsx
+│   │   │   │   ├── OrdersMerchant.jsx
+│   │   │   │   ├── RegisterMerchant.jsx
+│   │   │   │   └── SIdebarMerchant.jsx
+│   │   │   ├── ProductDetail.jsx
+│   │   │   ├── Register.jsx
+│   │   │   └── ShopDetail.jsx
+│   │   ├── products/
+│   │   │   ├── ProductCard.jsx
+│   │   │   └── ProductList.jsx
+│   │   ├── routes/
+│   │   │   ├── AppRouter.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   ├── ProtectedRouteMerchant.jsx
+│   │   │   └── routesConfig.jsx
+│   │   └── services/
+│   │       ├── authService.jsx
+│   │       ├── merchant/
+│   │       │   └── merchantService.jsx
+│   │       ├── productService.js
+│   │       └── shopService.js
+│   ├── tailwind.config.js
+│   └── vite.config.js
+├── package-lock.json
+└── README.md
 
-  %% Backend
-  A --> B_backend[backend]
-  B_backend --> B_env[".env"]
-  B_backend --> B_gitignore[".gitignore"]
-  B_backend --> B_controllers[controllers]
-  B_controllers --> B_products["productsController.js"]
-  B_controllers --> B_shops["shopsController.js"]
-  B_backend --> B_package_lock["package-lock.json"]
-  B_backend --> B_package["package.json"]
-  B_backend --> B_readme["README.md"]
-  B_backend --> B_routes[routes]
-  B_routes --> B_index["index.js"]
-  B_routes --> B_products_js["products.js"]
-  B_routes --> B_shops_js["shops.js"]
-  B_backend --> B_server["server.js"]
-  B_backend --> B_supabase["supabaseClient.js"]
-
-  %% Frontend
-  A --> C_frontend[frontend]
-  C_frontend --> C_postcss["postcss.config.js"]
-  C_frontend --> C_env[".env"]
-  C_frontend --> C_gitignore[".gitignore"]
-  C_frontend --> C_diagram["diagramme_BDD.svg"]
-  C_frontend --> C_home["home_de_depart"]
-  C_frontend --> C_index["index.html"]
-  C_frontend --> C_package_lock["package-lock.json"]
-  C_frontend --> C_package["package.json"]
-  C_frontend --> C_public[public]
-  C_public --> C_localstyle["localstyle.png"]
-  C_frontend --> C_shops[shops]
-  C_shops --> C_ShopCard["ShopCard.jsx"]
-  C_shops --> C_ShopList["ShopList.jsx"]
-
-  %% Src
-  C_frontend --> C_src[src]
-  C_src --> C_App["App.jsx"]
-  C_src --> C_App_css["App.css"]
-  C_src --> C_assets[assets]
-  C_assets --> C_logo["logo_google.jpeg"]
-  C_src --> C_components[components]
-  C_components --> C_DeliveryToggle["DeliveryToggle.jsx"]
-  C_components --> C_Footer["Footer.jsx"]
-  C_components --> C_Header["Header.jsx"]
-  C_components --> C_Layout["Layout.jsx"]
-  C_components --> C_LoadingSpinner["LoadingSpinner.jsx"]
-  C_components --> C_merchant[merchant]
-  C_merchant --> C_MerchantHeader["MerchantHeader.jsx"]
-  C_merchant --> C_MerchantOrderCard["MerchantOrderCard.jsx"]
-  C_merchant --> C_MerchantProductCard["MerchantProductCard.jsx"]
-  C_merchant --> C_MerchantSidebar["MerchantSidebar.jsx"]
-  C_merchant --> C_MerchantStatsCard["MerchantStatsCard.jsx"]
-  C_components --> C_SearchBar["SearchBar.jsx"]
-  C_components --> C_UserProfile["UserProfile.jsx"]
-  C_components --> C_UserSidebar["UserSidebar.jsx"]
-
-  C_src --> C_context[context]
-  C_context --> C_AuthContext["AuthContext.jsx"]
-  C_context --> C_AuthProvider["AuthProvider.jsx"]
-  C_context --> C_CartContext["CartContext.jsx"]
-  C_context --> C_CartProvider["CartProvider.jsx"]
-  C_context --> C_DeliveryContext["DeliveryContext.jsx"]
-  C_context --> C_DeliveryProvider["DeliveryProvider.jsx"]
-  C_context --> C_merchantCtx[merchant]
-  C_merchantCtx --> C_MerchantAuthContext["MerchantAuthContext.jsx"]
-
-  C_src --> C_hooks[hooks]
-  C_hooks --> C_merchantHooks[merchant]
-  C_merchantHooks --> C_useMerchantAnalytics["useMerchantAnalytics.jsx"]
-  C_merchantHooks --> C_useMerchantOrders["useMerchantOrders.jsx"]
-  C_merchantHooks --> C_useMerchantProducts["useMerchantProducts.jsx"]
-  C_hooks --> C_useCart["useCart.jsx"]
-  C_hooks --> C_useShop["useShop.jsx"]
-  C_hooks --> C_useShops["useShops.jsx"]
-
-  C_src --> C_index_css["index.css"]
-  C_src --> C_lib[lib]
-  C_lib --> C_supabaseClient["supabaseClient.js"]
-  C_src --> C_main["main.jsx"]
-
-  C_src --> C_pages[pages]
-  C_pages --> C_CartPage["CartPage.jsx"]
-  C_pages --> C_Checkout["Checkout.jsx"]
-  C_pages --> C_CompteUser["CompteUser.jsx"]
-  C_pages --> C_Home["Home.jsx"]
-  C_pages --> C_Login["Login.jsx"]
-  C_pages --> C_merchantPages[merchant]
-  C_merchantPages --> C_AnalyticsMerchant["AnalyticsMerchant.jsx"]
-  C_merchantPages --> C_DashboardMerchant["DashboardMerchant.jsx"]
-  C_merchantPages --> C_HeaderMerchant["HeaderMerchant.jsx"]
-  C_merchantPages --> C_LoginMerchant["LoginMerchant.jsx"]
-  C_merchantPages --> C_ManageProducts["ManageProducts.jsx"]
-  C_merchantPages --> C_ManageShop["ManageShop.jsx"]
-  C_merchantPages --> C_OrdersMerchant["OrdersMerchant.jsx"]
-  C_merchantPages --> C_RegisterMerchant["RegisterMerchant.jsx"]
-  C_merchantPages --> C_SidebarMerchant["SIdebarMerchant.jsx"]
-  C_pages --> C_ProductDetail["ProductDetail.jsx"]
-  C_pages --> C_Register["Register.jsx"]
-  C_pages --> C_ShopDetail["ShopDetail.jsx"]
-
-  C_src --> C_products[products]
-  C_products --> C_ProductCard["ProductCard.jsx"]
-  C_products --> C_ProductList["ProductList.jsx"]
-
-  C_src --> C_routes[routes]
-  C_routes --> C_AppRouter["AppRouter.jsx"]
-  C_routes --> C_ProtectedRoute["ProtectedRoute.jsx"]
-  C_routes --> C_ProtectedRouteMerchant["ProtectedRouteMerchant.jsx"]
-  C_routes --> C_routesConfig["routesConfig.jsx"]
-
-  C_src --> C_services[services]
-  C_services --> C_authService["authService.jsx"]
-  C_services --> C_merchantService[merchant]
-  C_merchantService --> C_merchantServiceFile["merchantService.jsx"]
-  C_services --> C_productService["productService.js"]
-  C_services --> C_shopService["shopService.js"]
-
-  C_frontend --> C_tailwind["tailwind.config.js"]
-  C_frontend --> C_vite["vite.config.js"]
-
-  %% Racine README
-  A --> D_readme["README.md"]
 ```
 
 6. Lancement_du_projet
