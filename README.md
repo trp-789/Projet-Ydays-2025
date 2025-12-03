@@ -26,6 +26,7 @@ L’application doit être rapide, moderne, responsive et simple d’utilisation
 * Fournir une interface ergonomique et fluide adaptée à tous les écrans.  
 * Garantir la sécurité et la fiabilité des données des utilisateurs.  
 * Mise en place du système du coursier (type Uber Eats).  
+* Filtre géographique pour afficher les commerces proches.  
 
 ---
 
@@ -50,9 +51,10 @@ L’application doit être rapide, moderne, responsive et simple d’utilisation
 
 ---
 
-## 4. Architecture du projet
+## 4. Architecture du projet 
 
-Organisation des dossiers (arborescence en **colonne**, comme dans le terminal) :
+Arborescence du projet 
+Organisation des dossiers (peut changer suivant l'évolution du projet) :
 
 ```text
 Projet-Ydays-2025/
@@ -193,12 +195,16 @@ npm start
 
 *(Ajouter ici vos captures d’écran ou diagrammes du projet)*
 
+Capture d'ecrans Interface Utilisateur :
+![Page d'accueil](frontend/captures_ecran/frontend1.png)
+![Panier](frontend/captures_ecran/frontend2.png)
+
+
 ---
 
 ## 7. Évolutions possibles
 
 * Système de paiement sécurisé (Stripe).  
-* Filtre géographique pour afficher les commerces proches.  
+
 * Application mobile avec React Native.  
-* Tableau de bord administrateur pour la gestion des stocks et commandes.
 
