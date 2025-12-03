@@ -1,133 +1,33 @@
+# Projet Ydays 2025 – Plateforme E-commerce Locale
 
+## 1. Présentation du projet
 
-Projet Ydays 2025 – Plateforme E-commerce Locale
+Le projet **Ydays 2025** a pour objectif de développer une **plateforme e-commerce locale** permettant aux commerçants et artisans d’une région de vendre leurs produits en ligne tout en favorisant le commerce de proximité.
+L’application doit être rapide, moderne, responsive et simple d’utilisation, pour les utilisateurs comme pour les administrateurs.
 
+## 2. Objectifs du projet
 
-1. Présentation du projet
+* Créer une application web complète (front-end et back-end).
+* Permettre la consultation, l’ajout au panier et l’achat de produits locaux.
+* Mettre en avant la proximité géographique entre acheteurs et commerçants.
+* Fournir une interface ergonomique et fluide adaptée à tous les écrans.
+* Garantir la sécurité et la fiabilité des données des utilisateurs.
 
-Le projet Ydays 2025 a pour objectif de développer une plateforme e-commerce locale permettant aux commerçants et artisans d’une région de vendre leurs produits en ligne tout en favorisant le commerce de proximité.
-L’application vise à être rapide, moderne, responsive et simple d’utilisation aussi bien pour les utilisateurs que pour les administrateurs.
+## 3. Stack technique
 
-2. Objectifs du projet
+**Front-end :** React avec Tailwind CSS
+**Back-end :** Node.js (Express.js) avec Supabase pour la base de données et l’authentification
 
-Créer une application web complète (front-end et back-end).
+### Explication simple des technologies
 
-Permettre la consultation, ajout au panier et achat de produits locaux.
+* **React :** Framework JavaScript moderne pour créer des interfaces utilisateurs dynamiques et modulaires. Permet des Single Page Applications (SPA) rapides.
+* **Tailwind CSS :** Framework CSS utilitaire qui simplifie le design et assure une cohérence visuelle rapide et maintenable.
+* **Node.js / Express.js :** Serveur JavaScript rapide et scalable, facile à connecter aux bases de données et API.
+* **Supabase :** Base de données PostgreSQL avec API et authentification intégrées, simplifiant la gestion des utilisateurs et des données.
 
-Mettre en avant la proximité géographique entre les acheteurs et les commerçants.
+## 4. Architecture du projet
 
-Fournir une interface ergonomique et fluide adaptée à tous les écrans.
-
-Garantir la sécurité et la fiabilité des données des utilisateurs.
-
-3. Stack technique choisie
-Front-end
-
-Framework : React
-
-Librairie CSS : Tailwind CSS
-
-Back-end
-
-Serveur : Node.js (Express.js)
-
-Base de données & Authentification : Supabase
-
-4. Justification des choix techniques
-➡️ React
-
-Raisons du choix :
-
-Framework JavaScript moderne, flexible et performant.
-
-Gestion du DOM virtuel (Virtual DOM) permettant une mise à jour rapide de l’interface.
-
-Permet de créer une application monopage (Single Page Application - SPA) fluide.
-
-Large écosystème de composants réutilisables et documentation abondante.
-
-Avantages :
-
-Meilleure expérience utilisateur (navigation sans rechargement complet).
-
-Structure modulaire facilitant la maintenance et la réutilisation du code.
-
-Compatible avec de nombreux outils modernes (Vite, Tailwind, Redux, etc.).
-
-➡️ Tailwind CSS
-
-Raisons du choix :
-
-Framework CSS moderne basé sur des classes utilitaires prêtes à l’emploi.
-
-Permet une personnalisation rapide du design sans devoir écrire de longues feuilles de style.
-
-Compatible nativement avec React et Vite.
-
-Avantages :
-
-Gain de temps considérable dans le développement de l’interface.
-
-Code plus lisible et plus facile à maintenir.
-
-Respect de la cohérence visuelle sur tout le projet.
-
-Installation :
-
-npm install -D tailwindcss@^3.3.0
-npx tailwindcss init
-
-
-Version utilisée : 3.x
-
-➡️ Node.js (avec Express.js)
-
-Raisons du choix :
-
-Permet de créer un serveur backend rapide et asynchrone en JavaScript.
-
-Facile à connecter avec des bases de données et des API externes.
-
-Utilisation du même langage (JavaScript) sur le front et le back.
-
-Avantages :
-
-Performance et scalabilité élevées.
-
-Large communauté et nombreux modules disponibles via npm.
-
-Intégration fluide avec Supabase et React.
-
-➡️ Supabase
-
-Raisons du choix :
-
-Alternative open-source à Firebase.
-
-Fournit une base de données PostgreSQL hébergée, avec API REST et authentification intégrée.
-
-Simplifie grandement la gestion des données et des utilisateurs.
-
-Fonctionnalités principales utilisées :
-
-Authentification (inscription / connexion).
-
-Stockage des produits et des utilisateurs.
-
-API en temps réel pour la mise à jour des données.
-
-Avantages :
-
-Réduction du temps de développement back-end.
-
-Sécurité intégrée et gestion des rôles.
-
-Interface d’administration simple pour visualiser la base.
-
-5. Architecture du projet
-Organisation des dossiers :
-
-## 5. Architecture du projet
+Organisation des dossiers (arborescence en **colonne**, comme dans le terminal) :
 
 ```text
 Projet-Ydays-2025/
@@ -147,16 +47,15 @@ Projet-Ydays-2025/
 │   ├── server.js
 │   └── supabaseClient.js
 ├── frontend/
-│   ├──  postcss.config.js
+│   ├── postcss.config.js
 │   ├── .env
 │   ├── .gitignore
-│   ├── diagramme BDD .svg
+│   ├── diagramme_BDD.svg
 │   ├── eslint.config.js
 │   ├── home_de_depart
 │   ├── index.html
 │   ├── package-lock.json
 │   ├── package.json
-│   ├── postcss.config.js
 │   ├── public/
 │   │   └── localstyle.png
 │   ├── recap_site_localstyle.png
@@ -174,7 +73,7 @@ Projet-Ydays-2025/
 │   │   │   ├── Header.jsx
 │   │   │   ├── Layout.jsx
 │   │   │   ├── LoadingSpinner.jsx
-│   │   │   ├── merchant.jsx/
+│   │   │   ├── merchant/
 │   │   │   │   ├── MerchantHeader.jsx
 │   │   │   │   ├── MerchantOrderCard.jsx
 │   │   │   │   ├── MerchantProductCard.jsx
@@ -241,28 +140,35 @@ Projet-Ydays-2025/
 │   └── vite.config.js
 ├── package-lock.json
 └── README.md
-
 ```
 
-6. Lancement_du_projet
-Côté Front-end :
+## 5. Lancement du projet
+
+**Côté Front-end :**
+
+```bash
 cd frontend
 npm install
 npm run dev
+```
 
-Côté Back-end :
+**Côté Back-end :**
+
+```bash
 cd backend
 npm install
 npm start
+```
 
-7. Illustration
+## 6. Illustration
 
-8. Évolutions possibles
+* Diagramme BDD : `frontend/diagramme_BDD.svg`
+* Aperçu site local : `frontend/recap_site_localstyle.png`
 
-Ajout d’un système de paiement sécurisé (ex : Stripe).
+## 7. Évolutions possibles
 
-Intégration d’un filtre géographique pour afficher les commerces proches.
+* Système de paiement sécurisé (Stripe).
+* Filtre géographique pour afficher les commerces proches.
+* Application mobile avec React Native.
+* Tableau de bord administrateur pour la gestion des stocks et commandes.
 
-Création d’une application mobile avec React Native.
-
-Tableau de bord administrateur pour la gestion des stocks et commandes.
