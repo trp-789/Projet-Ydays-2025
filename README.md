@@ -126,6 +126,7 @@ Interface d’administration simple pour visualiser la base.
 
 5. Architecture du projet
 Organisation des dossiers :
+"""
 Projet-Ydays-2025/
 ├── backend/
 │   ├── .env
@@ -237,7 +238,7 @@ Projet-Ydays-2025/
 │   └── vite.config.js
 ├── package-lock.json
 └── README.md
-
+"""
 
 6. Lancement du projet
 Côté Front-end :
