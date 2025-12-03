@@ -127,9 +127,11 @@ Interface d’administration simple pour visualiser la base.
 5. Architecture du projet
 Organisation des dossiers :
 
+## 5. Architecture du projet
+
 ```mermaid
 graph TD
-  A[Projet-Ydays-2025]
+  A[Projet_Ydays_2025]
 
   %% Backend
   A --> B_backend[backend]
@@ -154,7 +156,6 @@ graph TD
   C_frontend --> C_env[".env"]
   C_frontend --> C_gitignore[".gitignore"]
   C_frontend --> C_diagram["diagramme_BDD.svg"]
-  C_frontend --> C_eslint["eslint.config.js"]
   C_frontend --> C_home["home_de_depart"]
   C_frontend --> C_index["index.html"]
   C_frontend --> C_package_lock["package-lock.json"]
@@ -253,7 +254,6 @@ graph TD
 
   %% Racine README
   A --> D_readme["README.md"]
-'''
 
 6. Lancement du projet
 Côté Front-end :
