@@ -35,11 +35,8 @@ L’application doit être rapide, moderne, responsive et simple d’utilisation
 
 ## 3. Stack technique
 
-| **Front-end**                                                                                                                                                                                                                                            | **Back-end**                                                                                                                                                                                                                               |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React" width="40"/> **React**  <br> <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind" width="40"/> **Tailwind CSS** | <img src="https://nodejs.org/static/images/logo.svg" alt="Node.js" width="45"/> **Node.js (Express.js)**  <br> <img src="https://seeklogo.com/images/S/supabase-logo-DCC676FFE2-seeklogo.com.png" alt="Supabase" width="40"/> **Supabase** |
-
----
+**Front-end :** React avec Tailwind CSS  
+**Back-end :** Node.js (Express.js) avec Supabase pour la base de données et l’authentification  
 
 ### Explications des technologies
 
