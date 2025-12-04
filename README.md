@@ -1,13 +1,16 @@
 # Projet Ydays 2025 – Plateforme E-commerce Locale
 
 ## Sommaire
-- [1. Présentation du projet](#1-présentation-du-projet)
-- [2. Objectifs du projet](#2-objectifs-du-projet)
-- [3. Stack technique](#3-stack-technique)
-- [4. Architecture du projet](#4-architecture-du-projet)
-- [5. Lancement du projet](#5-lancement-du-projet)
-- [6. Illustration](#6-illustration)
-- [7. Évolutions possibles](#7-évolutions-possibles)
+- [Projet Ydays 2025 – Plateforme E-commerce Locale](#projet-ydays-2025--plateforme-e-commerce-locale)
+  - [Sommaire](#sommaire)
+  - [1. Présentation du projet](#1-présentation-du-projet)
+  - [2. Objectifs du projet](#2-objectifs-du-projet)
+  - [3. Stack technique](#3-stack-technique)
+    - [Explications des technologies](#explications-des-technologies)
+  - [4. Architecture du projet](#4-architecture-du-projet)
+  - [5. Lancement du projet](#5-lancement-du-projet)
+  - [6. Illustration](#6-illustration)
+  - [7. Évolutions possibles](#7-évolutions-possibles)
 
 ---
 
@@ -32,8 +35,11 @@ L’application doit être rapide, moderne, responsive et simple d’utilisation
 
 ## 3. Stack technique
 
-**Front-end :** React avec Tailwind CSS  
-**Back-end :** Node.js (Express.js) avec Supabase pour la base de données et l’authentification  
+| **Front-end**                                                                                                                                                                                                                                            | **Back-end**                                                                                                                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React" width="40"/> **React**  <br> <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind" width="40"/> **Tailwind CSS** | <img src="https://nodejs.org/static/images/logo.svg" alt="Node.js" width="45"/> **Node.js (Express.js)**  <br> <img src="https://seeklogo.com/images/S/supabase-logo-DCC676FFE2-seeklogo.com.png" alt="Supabase" width="40"/> **Supabase** |
+
+---
 
 ### Explications des technologies
 
