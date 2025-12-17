@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useCart } from '../hooks/useCart';
 import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -29,7 +30,7 @@ const ShopDetail = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [favorites, setFavorites] = useState(new Set());
-  const [cart, setCart] = useState([]);
+  const { addItem } = useCart();
   const [showFilters, setShowFilters] = useState(false);
 
   // derived categories from shop products
@@ -90,15 +91,9 @@ const ShopDetail = () => {
     });
   };
 
-  // cart add
+  // cart add via contexte global
   const addToCart = (product) => {
-    setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
-      if (existing) {
-        return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
+    addItem(product);
   };
 
   if (loading) return <LoadingSpinner />;

@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useState, useRef, useEffect } from 'react';
 import { CartContext } from './CartContext';
 
 // Reducer
@@ -55,9 +55,18 @@ const cartReducer = (state, action) => {
 // Provider avec value obligatoire
 const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, { items: [] });
+  const [notification, setNotification] = useState({ visible: false, text: '' });
+  const notifTimeout = useRef(null);
 
   const addItem = (product) => {
     dispatch({ type: 'ADD_ITEM', payload: product });
+    // Affiche une notification courte
+    setNotification({ visible: true, text: 'Ajouté au panier' });
+    if (notifTimeout.current) clearTimeout(notifTimeout.current);
+    notifTimeout.current = setTimeout(() => {
+      setNotification({ visible: false, text: '' });
+      notifTimeout.current = null;
+    }, 2000);
   };
 
   const removeItem = (productId) => {
@@ -93,6 +102,15 @@ const CartProvider = ({ children }) => {
   return (
     <CartContext.Provider value={value}>
       {children}
+
+      {/* Notification simple affichée par le provider */}
+      {notification.visible && (
+        <div className="fixed right-4 bottom-6 z-50">
+          <div className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg">
+            {notification.text}
+          </div>
+        </div>
+      )}
     </CartContext.Provider>
   );
 };
