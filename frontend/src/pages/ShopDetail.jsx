@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // Corrige l'import
 import { motion, AnimatePresence } from 'framer-motion';
+
 import { 
   Star, 
   Heart, 
@@ -19,6 +20,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 const ShopDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate(); // useNavigate est maintenant importé
   const { shop, loading, error } = useShop(id);
 
   // states
@@ -282,6 +284,7 @@ const ShopDetail = () => {
                   isFavorite={favorites.has(product.id)}
                   onToggleFavorite={() => toggleFavorite(product.id)}
                   onAddToCart={() => addToCart(product)}
+                  onClick={() => navigate(`/product/${product.id}`)}
                 />
               ))}
             </AnimatePresence>
@@ -297,6 +300,7 @@ const ShopDetail = () => {
                   isFavorite={favorites.has(product.id)}
                   onToggleFavorite={() => toggleFavorite(product.id)}
                   onAddToCart={() => addToCart(product)}
+                  onClick={() => navigate(`/product/${product.id}`)}
                 />
               ))}
             </AnimatePresence>
@@ -320,7 +324,7 @@ const ShopDetail = () => {
    kept simple and compatible with props used above
    ----------------------------- */
 
-const ProductCard = ({ product, index, isFavorite, onToggleFavorite, onAddToCart }) => (
+const ProductCard = ({ product, index, isFavorite, onToggleFavorite, onAddToCart, onClick }) => ( // Ajoute onClick
   <motion.div
     layout
     initial={{ opacity: 0, scale: 0.96 }}
@@ -329,6 +333,7 @@ const ProductCard = ({ product, index, isFavorite, onToggleFavorite, onAddToCart
     transition={{ delay: index * 0.03 }}
     whileHover={{ y: -5 }}
     className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden group cursor-pointer"
+    onClick={onClick} // Ajoute cette ligne
   >
     <div className="relative overflow-hidden">
       <img src={product.image} alt={product.name} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
@@ -366,8 +371,16 @@ const ProductCard = ({ product, index, isFavorite, onToggleFavorite, onAddToCart
   </motion.div>
 );
 
-const ProductRow = ({ product, index, isFavorite, onToggleFavorite, onAddToCart }) => (
-  <motion.div layout initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} transition={{ delay: index * 0.02 }} className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-shadow cursor-pointer group">
+const ProductRow = ({ product, index, isFavorite, onToggleFavorite, onAddToCart, onClick }) => ( // Ajoute onClick
+  <motion.div 
+    layout 
+    initial={{ opacity: 0, x: -10 }} 
+    animate={{ opacity: 1, x: 0 }} 
+    exit={{ opacity: 0, x: 10 }} 
+    transition={{ delay: index * 0.02 }} 
+    className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-shadow cursor-pointer group"
+    onClick={onClick} // Ajoute cette ligne
+  >
     <div className="flex gap-6">
       <img src={product.image} alt={product.name} className="w-32 h-32 object-cover rounded-lg" />
       <div className="flex-1 min-w-0">

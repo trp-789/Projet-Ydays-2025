@@ -1,58 +1,181 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useShop } from '../hooks/useShop';
-import ProductList from '../products/ProductList';
+import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useProduct } from '../hooks/useProduct';
+import { useCart } from '../hooks/useCart';
 import LoadingSpinner from '../components/LoadingSpinner';
 
-const ShopDetail = () => {
+const ProductDetail = () => {
   const { id } = useParams();
-  const { shop, loading, error } = useShop(id);
+  const { product, loading, error } = useProduct(id);
+  const { addItem } = useCart();
+  const [quantity, setQuantity] = useState(1);
 
-  if (loading) return <LoadingSpinner />;
-  if (error) return <div className="error">Erreur: {error}</div>;
-  if (!shop) return <div>Boutique non trouvée</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-blue-50 pt-20">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
-  return (
-    <div className="shop-detail-page">
-      {/* En-tête de la boutique */}
-      <div className="shop-header">
-        <div className="shop-cover">
-          <img src={shop.image} alt={shop.name} className="cover-image" />
-        </div>
-        
-        <div className="shop-info-header">
-          <h1 className="shop-title">{shop.name}</h1>
-          <p className="shop-category">{shop.category}</p>
-          
-          <div className="shop-meta">
-            <div className="meta-item">
-              <span className="star">⭐</span>
-              <span>{shop.rating}</span>
-            </div>
-            <div className="meta-item">
-              <span>🕒 {shop.delivery_time}</span>
-            </div>
-            <div className="meta-item">
-              <span>🚴 {shop.delivery_fee}</span>
-            </div>
-            <div className="meta-item">
-              <span>💰 Min. {shop.minimum_order}€</span>
-            </div>
-          </div>
-
-          <p className="shop-description">{shop.description}</p>
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-blue-50 pt-20">
+        <div className="text-center">
+          <div className="text-6xl mb-4">😔</div>
+          <h2 className="text-2xl font-bold text-blue-900 mb-4">Produit non trouvé</h2>
+          <p className="text-blue-600 max-w-md">{error}</p>
+          <Link to="/shops" className="mt-4 inline-block bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">
+            Retour aux boutiques
+          </Link>
         </div>
       </div>
+    );
+  }
 
-      {/* Produits */}
-      <div className="products-section">
-        <div className="container">
-          <h2 className="section-title">Menu</h2>
-          <ProductList products={shop.products || []} />
+  if (!product) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-blue-50 pt-20">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🔍</div>
+          <h2 className="text-2xl font-bold text-blue-900 mb-4">Produit introuvable</h2>
+          <Link to="/shops" className="inline-block bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">
+            Explorer les boutiques
+          </Link>
         </div>
+      </div>
+    );
+  }
+
+  const handleAddToCart = () => {
+    for (let i = 0; i < quantity; i++) {
+      addItem(product);
+    }
+  };
+
+  return (
+    <div className="product-detail-page bg-blue-50 min-h-screen pt-20">
+      <div className="container mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Image du produit */}
+          <div className="relative">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-96 lg:h-[500px] object-cover rounded-xl shadow-lg"
+            />
+            {product.shops && (
+              <div className="absolute top-4 left-4 bg-white bg-opacity-90 backdrop-blur-sm rounded-lg p-3 shadow-md">
+                <Link to={`/shop/${product.shops.id}`} className="flex items-center space-x-2 text-sm">
+                  <img src={product.shops.image} alt={product.shops.name} className="w-8 h-8 rounded-full object-cover" />
+                  <span className="font-medium text-blue-900">{product.shops.name}</span>
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Détails du produit */}
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-2">{product.name}</h1>
+              <p className="text-blue-700 text-lg">{product.category || 'Produit'}</p>
+            </div>
+
+            <div className="text-3xl font-bold text-blue-600">
+              {product.price}€
+            </div>
+
+            <div className="prose prose-blue max-w-none">
+              <h3 className="text-xl font-semibold text-blue-900 mb-3">Description</h3>
+              <p className="text-blue-700 leading-relaxed">{product.description}</p>
+            </div>
+
+            {/* Informations supplémentaires */}
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              {product.stock && (
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="font-semibold text-blue-900">Stock</div>
+                  <div className="text-blue-600">{product.stock} disponibles</div>
+                </div>
+              )}
+              {product.shops?.delivery_time && (
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="font-semibold text-blue-900">Livraison</div>
+                  <div className="text-blue-600">{product.shops.delivery_time}</div>
+                </div>
+              )}
+            </div>
+
+            {/* Sélecteur de quantité et bouton ajouter */}
+            <div className="bg-white rounded-xl p-6 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="font-semibold text-blue-900">Quantité</label>
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-10 h-10 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold flex items-center justify-center"
+                  >
+                    -
+                  </button>
+                  <span className="w-12 text-center font-semibold text-blue-900">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-10 h-10 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold flex items-center justify-center"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <button
+                onClick={handleAddToCart}
+                className="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg font-semibold text-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+              >
+                <span>🛒</span>
+                <span>Ajouter au panier • {(product.price * quantity).toFixed(2)}€</span>
+              </button>
+            </div>
+
+            {/* Bouton retour à la boutique */}
+            {product.shops && (
+              <Link
+                to={`/shop/${product.shops.id}`}
+                className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-800 font-medium"
+              >
+                <span>←</span>
+                <span>Retour à {product.shops.name}</span>
+              </Link>
+            )}
+          </div>
+        </div>
+
+        {/* Section produits similaires (optionnel) */}
+        {product.shops?.products && product.shops.products.length > 1 && (
+          <div className="mt-16">
+            <h3 className="text-2xl font-bold text-blue-900 mb-6">Autres produits de {product.shops.name}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {product.shops.products
+                .filter(p => p.id !== product.id)
+                .slice(0, 3)
+                .map(otherProduct => (
+                  <Link
+                    key={otherProduct.id}
+                    to={`/product/${otherProduct.id}`}
+                    className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                  >
+                    <img src={otherProduct.image} alt={otherProduct.name} className="w-full h-48 object-cover" />
+                    <div className="p-4">
+                      <h4 className="font-semibold text-blue-900 mb-1">{otherProduct.name}</h4>
+                      <p className="text-blue-600 font-bold">{otherProduct.price}€</p>
+                    </div>
+                  </Link>
+                ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default ShopDetail;
+export default ProductDetail;

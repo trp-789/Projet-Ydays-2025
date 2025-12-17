@@ -1,22 +1,29 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Ajoute cette import
 import { useCart } from '../hooks/useCart';
 
 const ProductCard = ({ product }) => {
   const { addItem } = useCart();
+  const navigate = useNavigate(); // Ajoute cette ligne
 
   const handleAddToCart = (e) => {
-    e.preventDefault(); // Empêche la navigation
-    e.stopPropagation(); // Empêche la propagation du clic
+    e.preventDefault();
+    e.stopPropagation();
     addItem(product);
   };
 
+  const handleCardClick = (e) => {
+    // Empêche la navigation si on clique sur le bouton
+    if (e.target.closest('button')) return;
+    navigate(`/product/${product.id}`);
+  };
+
   return (
-    <Link 
-      to={`/product/${product.id}`} 
-      className="block group"
+    <div 
+      onClick={handleCardClick} // Remplace Link par onClick
+      className="block group cursor-pointer"
     >
-      <div className="product-card bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer">
+      <div className="product-card bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
         {/* Image avec overlay au survol */}
         <div className="relative overflow-hidden">
           <img 
@@ -70,7 +77,7 @@ const ProductCard = ({ product }) => {
           )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
