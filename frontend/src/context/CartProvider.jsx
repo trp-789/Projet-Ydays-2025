@@ -1,5 +1,8 @@
 import React, { useReducer, useState, useRef, useEffect } from 'react';
 import { CartContext } from './CartContext';
+import { supabase } from '../lib/supabaseClient';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 // Reducer
 const cartReducer = (state, action) => {
@@ -88,6 +91,111 @@ const CartProvider = ({ children }) => {
   const getCartTotal = () => {
     return state.items.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
+
+  // LocalStorage fallback
+  const LOCAL_KEY = 'ydays_cart_local';
+
+  const loadLocal = () => {
+    try {
+      const raw = localStorage.getItem(LOCAL_KEY)
+      if (!raw) return []
+      return JSON.parse(raw)
+    } catch (e) {
+      return []
+    }
+  }
+
+  const saveLocal = (items) => {
+    try {
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(items))
+    } catch (e) {}
+  }
+
+  // Load local cart on mount
+  useEffect(() => {
+    const local = loadLocal()
+    if (local && local.length) {
+      // initialize state with local items
+      local.forEach(it => dispatch({ type: 'ADD_ITEM', payload: it }))
+    }
+  }, [])
+
+  // Auth sync: merge local cart on sign-in and load server cart
+  useEffect(() => {
+    const subscription = supabase.auth.onAuthStateChange(async (event, session) => {
+      try {
+        if (event === 'SIGNED_IN' && session?.access_token) {
+          const token = session.access_token
+          const local = loadLocal()
+          // send merge request if local has items
+          if (local && local.length) {
+            await fetch(`${API_BASE}/cart/merge`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+              },
+              body: JSON.stringify({ items: local.map(i => ({ product_id: i.id, quantity: i.quantity })) })
+            })
+            // clear local after merge
+            localStorage.removeItem(LOCAL_KEY)
+          }
+
+          // load server cart
+          const resp = await fetch(`${API_BASE}/cart`, { headers: { Authorization: `Bearer ${token}` } })
+          if (resp.ok) {
+            const { items } = await resp.json()
+            // Map server items to front-end shape: id = product_id
+            dispatch({ type: 'CLEAR_CART' })
+            items.forEach(it => {
+              dispatch({ type: 'ADD_ITEM', payload: { id: it.product_id, price: Number(it.unit_price), name: it.product_name, image: it.product_image } })
+              // then set correct quantity
+              dispatch({ type: 'UPDATE_QUANTITY', payload: { id: it.product_id, quantity: it.quantity } })
+            })
+          }
+        }
+
+        if (event === 'SIGNED_OUT') {
+          // persist current state to localStorage
+          saveLocal(state.items)
+        }
+      } catch (e) {
+        console.error('Cart sync error', e)
+      }
+    })
+
+    return () => subscription?.data?.subscription?.unsubscribe && subscription.data.subscription.unsubscribe()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.items])
+
+  // Auto-save to server when user is signed in (debounced)
+  useEffect(() => {
+    let timeout
+    const save = async () => {
+      try {
+        const { data: session } = await supabase.auth.getSession()
+        const token = session?.access_token
+        if (!token) return
+
+        const payload = state.items.map(i => ({ product_id: i.id, quantity: i.quantity }))
+        await fetch(`${API_BASE}/cart`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ items: payload })
+        })
+      } catch (e) {
+        console.error('Failed to save cart', e)
+      }
+    }
+
+    // debounce
+    timeout = setTimeout(save, 800)
+    // also persist locally for guests
+    saveLocal(state.items)
+
+    return () => clearTimeout(timeout)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.items])
 
   // L'objet value est OBLIGATOIRE pour Context.Provider
   const value = {
