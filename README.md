@@ -215,6 +215,12 @@ Capture d'ecrans Interface Utilisateur :
 
 ## 7. Évolutions possibles
 * Important - Mettre une Maps(avec l'API Google Maps) pour localiser les clients en fonction de leur emplacement (voir la stratégie)
+Quand l'app grandira, je pourrais :
+Ajouter latitude / longitude au moment de créer un shop
+Calculer les distances
+Débloquer plusieurs villes
+Utiliser Google Maps intelligemment
+------------
 * Système de paiement sécurisé (Stripe).  
 * Application mobile avec React Native.  
 
