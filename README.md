@@ -214,8 +214,7 @@ Capture d'ecrans Interface Utilisateur :
 ---
 
 ## 7. Évolutions possibles
-
+* Important - Mettre une Maps(avec l'API Google Maps) pour localiser les clients en fonction de leur emplacement (voir la stratégie)
 * Système de paiement sécurisé (Stripe).  
-
 * Application mobile avec React Native.  
 
