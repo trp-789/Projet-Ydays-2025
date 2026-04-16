@@ -18,21 +18,21 @@ const Home = () => {
   const { user, loading: authLoading } = useAuth();
   const { shops, loading: shopsLoading, error } = useShops(selectedCategory, deliveryMode);
 
+
   // Mouse interactions
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const rotateX = useTransform(mouseY, [-200, 200], [3, -3]); // rotation douce
-  const rotateY = useTransform(mouseX, [-200, 200], [-3, 3]); // rotation douce
+  const rotateX = useTransform(mouseY, [-200, 200], [1.5, -1.5]); // rotation plus douce
+  const rotateY = useTransform(mouseX, [-200, 200], [-1.5, 1.5]); // rotation plus douce
 
   // Catégories streetwear avec emojis
   const categories = [
     { emoji: "👟", name: "Chaussures" },
     { emoji: "👕", name: "Vêtements" },
-    { emoji: "🧢", name: "Casquettes" },
     { emoji: "💎", name: "Accessoires" },
-    { emoji: "⌚", name: "Montres" },
     { emoji: "🕶️", name: "Mixte" },
   ];
+
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -70,10 +70,12 @@ const Home = () => {
     );
   }
 
-  const filteredShops = shops?.filter(shop => 
-    shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    shop.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+ const filteredShops = shops?.filter(shop => 
+  shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  shop.category.toLowerCase().includes(searchQuery.toLowerCase())
+);
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-cyan-50 font-sans">
@@ -93,7 +95,7 @@ const Home = () => {
             alt="LocalStyle - Streetwear Local"
             className="w-4/5 h-4/5 object-contain opacity-25"
             animate={{ 
-              scale: isHovering ? 1.02 : 1,
+              scale: isHovering ? 1.005 : 1,
             }}
             transition={{ duration: 0.5 }}
           />
@@ -199,7 +201,7 @@ const Home = () => {
 
           {/* Barre d'emojis */}
 <motion.div 
-  className="flex justify-center flex-wrap gap-3 md:gap-4 lg:gap-6 max-w-6xl mx-auto mb-12"
+  className="flex justify-center flex-wrap gap-3 md:gap-4 lg:gap-5 max-w-5xl mx-auto mb-10"
   initial={{ opacity: 0 }}
   whileInView={{ opacity: 1 }}
   viewport={{ once: true }}
@@ -209,9 +211,9 @@ const Home = () => {
     <motion.button
       key={category.name}
       onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
-      whileHover={{ scale: 1.015 }} // adouci
-      whileTap={{ scale: 0.99 }}     // adouci
-      initial={{ opacity: 0, y: 10 }} // adouci
+      whileHover={{ scale: 1.005 }}
+      whileTap={{ scale: 0.995 }}     
+      initial={{ opacity: 0, y: 8 }} 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.07 }}
@@ -247,50 +249,138 @@ const Home = () => {
                 <LoadingSpinner size="large" />
               </motion.div>
             ) : filteredShops && filteredShops.length > 0 ? (
-              <motion.div
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                {filteredShops.map((shop, index) => (
+              (() => {
+                // Si une catégorie est sélectionnée, on montre jusqu'à 5 shops de cette catégorie
+                if (selectedCategory) {
+                  const toShow = filteredShops
+                    .filter(s => (s.category || '').toLowerCase() === selectedCategory.toLowerCase())
+                    .slice(0, 5);
+
+                  return (
+                    <motion.div
+                      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                    >
+                      {toShow.map((shop, index) => (
+                        <motion.div
+                          key={shop.id}
+                          initial={{ opacity: 0, y: 16 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: index * 0.06 }}
+                          whileHover={{ scale: 1.01, y: -1 }}
+                          className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer group"
+                        >
+                          <Link to={`/shop/${shop.id}`}>
+                            <div className="h-44 w-full overflow-hidden relative">
+                              <motion.img
+                                src={shop.image || heroImage}
+                                alt={shop.name}
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                            </div>
+                            <div className="p-5">
+                              <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-2">
+                                {shop.name}
+                              </h3>
+                              <p className="text-gray-600 text-sm mb-3 capitalize">
+                                {shop.category}
+                              </p>
+                              <div className="flex justify-between items-center">
+                                <p className="text-blue-600 font-semibold text-sm">
+                                  {shop.distance ? `${shop.distance} km` : '📍 Local'}
+                                </p>
+                                <motion.span whileHover={{ scale: 1.05 }} className="text-lg font-bold">
+                                  →
+                                </motion.span>
+                              </div>
+                            </div>
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  );
+                }
+
+                // Sinon, on affiche 5 magasins au total, un par type maximum
+                const typeOrder = categories.map(c => c.name);
+                const picked = [];
+                const pickedIds = new Set();
+                const usedTypes = new Set();
+
+                // 1ère passe: respecter l'ordre défini des catégories
+                for (const type of typeOrder) {
+                  const shop = filteredShops.find(s => (s.category || '').toLowerCase() === type.toLowerCase());
+                  if (shop && !pickedIds.has(shop.id)) {
+                    picked.push(shop);
+                    pickedIds.add(shop.id);
+                    usedTypes.add(type.toLowerCase());
+                    if (picked.length === 5) break;
+                  }
+                }
+
+                // 2ème passe: compléter avec d'autres types non utilisés encore
+                if (picked.length < 5) {
+                  for (const s of filteredShops) {
+                    const t = (s.category || '').toLowerCase();
+                    if (!pickedIds.has(s.id) && !usedTypes.has(t)) {
+                      picked.push(s);
+                      pickedIds.add(s.id);
+                      usedTypes.add(t);
+                      if (picked.length === 5) break;
+                    }
+                  }
+                }
+
+                return (
                   <motion.div
-                    key={shop.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ scale: 1.03, y: -3 }}
-                    className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer group"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                   >
-                    <Link to={`/shop/${shop.id}`}>
-                      <div className="h-48 w-full overflow-hidden relative">
-                        <motion.img
-                          src={shop.image || heroImage}
-                          alt={shop.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                      </div>
-                      <div className="p-5">
-                        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
-                          {shop.name}
-                        </h3>
-                        <p className="text-gray-600 text-base mb-3 capitalize">
-                          {shop.category}
-                        </p>
-                        <div className="flex justify-between items-center">
-                          <p className="text-blue-600 font-semibold text-base">
-                            {shop.distance ? `${shop.distance} km` : '📍 Local'}
-                          </p>
-                          <motion.span whileHover={{ scale: 1.1 }} className="text-xl font-bold">
-                            →
-                          </motion.span>
-                        </div>
-                      </div>
-                    </Link>
+                    {picked.map((shop, index) => (
+                      <motion.div
+                        key={shop.id}
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.06 }}
+                        whileHover={{ scale: 1.01, y: -1 }}
+                        className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer group"
+                      >
+                        <Link to={`/shop/${shop.id}`}>
+                          <div className="h-44 w-full overflow-hidden relative">
+                            <motion.img
+                              src={shop.image || heroImage}
+                              alt={shop.name}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                          </div>
+                          <div className="p-5">
+                            <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-2">
+                              {shop.name}
+                            </h3>
+                            <p className="text-gray-600 text-sm mb-3 capitalize">
+                              {shop.category}
+                            </p>
+                            <div className="flex justify-between items-center">
+                              <p className="text-blue-600 font-semibold text-sm">
+                                {shop.distance ? `${shop.distance} km` : '📍 Local'}
+                              </p>
+                              <motion.span whileHover={{ scale: 1.05 }} className="text-lg font-bold">
+                                →
+                              </motion.span>
+                            </div>
+                          </div>
+                        </Link>
+                      </motion.div>
+                    ))}
                   </motion.div>
-                ))}
-              </motion.div>
+                );
+              })()
             ) : (
               <motion.div
                 className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg max-w-2xl mx-auto"
@@ -306,8 +396,8 @@ const Home = () => {
                       setSelectedCategory(null);
                       setSearchQuery('');
                     }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.99 }}
                     className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all"
                   >
                     Voir tous les shops

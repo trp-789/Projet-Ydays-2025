@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
-
+// instanciation du client Supabase pour se connecte a la bdd supabase avec des variables d'environnement
+// ce fichier est importe un peu partout  dans les fichier frontend(authService, shopService, etc)
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 

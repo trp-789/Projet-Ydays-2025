@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useProduct } from '../hooks/useProduct';
-import { useCart } from '../hooks/useCart';
+import CartContext from '../context/CartContext';
 import LoadingSpinner from '../components/LoadingSpinner';
+
+import SimilarProducts from '../components/SimilarProducts';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const { product, loading, error } = useProduct(id);
-  const { addItem } = useCart();
+  const { addItem } = useContext(CartContext);
   const [quantity, setQuantity] = useState(1);
+  const [isAdded, setIsAdded] = useState(false);
 
   if (loading) {
     return (
@@ -48,9 +51,11 @@ const ProductDetail = () => {
   }
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addItem(product);
-    }
+    addItem(product, quantity);
+    setIsAdded(true);
+    setTimeout(() => {
+      setIsAdded(false);
+    }, 2000);
   };
 
   return (
@@ -60,14 +65,14 @@ const ProductDetail = () => {
           {/* Image du produit */}
           <div className="relative">
             <img
-              src={product.image}
+              src={product.image || '/placeholder.png'}
               alt={product.name}
               className="w-full h-96 lg:h-[500px] object-cover rounded-xl shadow-lg"
             />
             {product.shops && (
               <div className="absolute top-4 left-4 bg-white bg-opacity-90 backdrop-blur-sm rounded-lg p-3 shadow-md">
                 <Link to={`/shop/${product.shops.id}`} className="flex items-center space-x-2 text-sm">
-                  <img src={product.shops.image} alt={product.shops.name} className="w-8 h-8 rounded-full object-cover" />
+                  <img src={product.shops.image || '/placeholder.png'} alt={product.shops.name} className="w-8 h-8 rounded-full object-cover" />
                   <span className="font-medium text-blue-900">{product.shops.name}</span>
                 </Link>
               </div>
@@ -114,6 +119,7 @@ const ProductDetail = () => {
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="w-10 h-10 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold flex items-center justify-center"
+                    disabled={isAdded}
                   >
                     -
                   </button>
@@ -121,6 +127,7 @@ const ProductDetail = () => {
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="w-10 h-10 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold flex items-center justify-center"
+                    disabled={isAdded || (product.stock && quantity >= product.stock)}
                   >
                     +
                   </button>
@@ -129,10 +136,28 @@ const ProductDetail = () => {
 
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-lg font-semibold text-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                disabled={isAdded || (product.stock && product.stock === 0)}
+                className={`w-full text-white py-4 rounded-lg font-semibold text-lg transition-colors duration-200 flex items-center justify-center space-x-2 ${
+                  isAdded
+                    ? 'bg-green-500 cursor-not-allowed'
+                    : (product.stock && product.stock === 0) 
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-blue-700 hover:bg-blue-800'
+                }`}
               >
-                <span>🛒</span>
-                <span>Ajouter au panier • {(product.price * quantity).toFixed(2)}€</span>
+                {isAdded ? (
+                  <>
+                    <span>✅</span>
+                    <span>Ajouté !</span>
+                  </>
+                ) : (product.stock && product.stock === 0) ? (
+                  <span>Rupture de stock</span>
+                ) : (
+                  <>
+                    <span>🛒</span>
+                    <span>Ajouter au panier • {(product.price * quantity).toFixed(2)}€</span>
+                  </>
+                )}
               </button>
             </div>
 
@@ -149,33 +174,13 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* Section produits similaires (optionnel) */}
-        {product.shops?.products && product.shops.products.length > 1 && (
-          <div className="mt-16">
-            <h3 className="text-2xl font-bold text-blue-900 mb-6">Autres produits de {product.shops.name}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {product.shops.products
-                .filter(p => p.id !== product.id)
-                .slice(0, 3)
-                .map(otherProduct => (
-                  <Link
-                    key={otherProduct.id}
-                    to={`/product/${otherProduct.id}`}
-                    className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-                  >
-                    <img src={otherProduct.image} alt={otherProduct.name} className="w-full h-48 object-cover" />
-                    <div className="p-4">
-                      <h4 className="font-semibold text-blue-900 mb-1">{otherProduct.name}</h4>
-                      <p className="text-blue-600 font-bold">{otherProduct.price}€</p>
-                    </div>
-                  </Link>
-                ))}
-            </div>
-          </div>
+        {product.shops && (
+          <SimilarProducts shopId={product.shops.id} currentProductId={product.id} />
         )}
       </div>
     </div>
   );
 };
+
 
 export default ProductDetail;

@@ -10,6 +10,7 @@ export const shopService = {
           *,
           products (*)
         `)
+        .eq('city', 'Montpellier')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -33,6 +34,7 @@ export const shopService = {
         .from('shops')
         .select('*')
         .eq('category', category)
+        .eq('city', 'Montpellier')
         .order('created_at', { ascending: false });
 
       if (error) throw error;

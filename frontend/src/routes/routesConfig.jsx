@@ -56,7 +56,7 @@ export const routes = (
     <Route
       path="/cart"
       element={
-        <ProtectedRoute role="user">
+        <ProtectedRoute>
           <CartPage />
         </ProtectedRoute>
       }

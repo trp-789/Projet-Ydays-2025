@@ -1,101 +1,106 @@
-import React, { useReducer } from 'react';
-import { CartContext } from './CartContext';
+import React, { useState, useEffect } from 'react'
+import CartContext from './CartContext'
+import * as cartService from '../services/cartService'
 
-// Reducer
-const cartReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADD_ITEM': {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-      if (existingItem) {
-        return {
-          ...state,
-          items: state.items.map(item =>
-            item.id === action.payload.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          )
-        };
+export function CartProvider({ children }) {
+  const [cart, setCart] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchCart() {
+      try {
+        const data = await cartService.getCart()
+        setCart(data)
+      } catch (error) {
+        console.error('Failed to fetch cart:', error)
+      } finally {
+        setLoading(false)
       }
-      return {
-        ...state,
-        items: [...state.items, { ...action.payload, quantity: 1 }]
-      };
     }
+    fetchCart()
+  }, [])
 
-    case 'REMOVE_ITEM': {
-      return {
-        ...state,
-        items: state.items.filter(item => item.id !== action.payload)
-      };
-    }
-
-    case 'UPDATE_QUANTITY': {
-      return {
-        ...state,
-        items: state.items.map(item =>
-          item.id === action.payload.id
-            ? { ...item, quantity: action.payload.quantity }
-            : item
+  const addItem = async (product, quantity = 1) => {
+    try {
+      // Optimistic update: add to cart immediately
+      const existingItem = cart.find((item) => item.products.id === product.id)
+      if (existingItem) {
+        const updatedCart = cart.map((item) =>
+          item.products.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
         )
-      };
-    }
+        setCart(updatedCart)
+      } else {
+        // This is tricky without the real backend response.
+        // We'll just add the product info and a temporary quantity.
+        const tempNewItem = {
+            id: `temp-${Date.now()}`, // Temporary ID
+            quantity: quantity,
+            products: product
+        }
+        setCart([...cart, tempNewItem])
+      }
+      
+      const newItem = await cartService.addItemToCart({ product_id: product.id, quantity })
+      // To get the real cart state, we should probably refetch it.
+      const data = await cartService.getCart()
+      setCart(data)
 
-    case 'CLEAR_CART': {
-      return {
-        ...state,
-        items: []
-      };
-    }
 
-    default:
-      return state;
+    } catch (error) {
+      console.error('Failed to add item to cart:', error)
+      // Optionally, revert the optimistic update here
+    }
   }
-};
 
-// Provider avec value obligatoire
-const CartProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, { items: [] });
-
-  const addItem = (product) => {
-    dispatch({ type: 'ADD_ITEM', payload: product });
-  };
-
-  const removeItem = (productId) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: productId });
-  };
-
-  const updateQuantity = (productId, quantity) => {
+  const updateItemQuantity = async (itemId, quantity) => {
     if (quantity <= 0) {
-      removeItem(productId);
-    } else {
-      dispatch({ type: 'UPDATE_QUANTITY', payload: { id: productId, quantity } });
+      return removeItem(itemId)
     }
-  };
+    try {
+      const updatedCart = cart.map((item) =>
+        item.id === itemId ? { ...item, quantity } : item
+      )
+      setCart(updatedCart)
+      await cartService.updateCartItem(itemId, { quantity })
+    } catch (error) {
+      console.error('Failed to update item quantity:', error)
+    }
+  }
 
-  const clearCart = () => {
-    dispatch({ type: 'CLEAR_CART' });
-  };
+  const removeItem = async (itemId) => {
+    try {
+      const updatedCart = cart.filter((item) => item.id !== itemId)
+      setCart(updatedCart)
+      await cartService.removeCartItem(itemId)
+    } catch (error) {
+      console.error('Failed to remove item from cart:', error)
+    }
+  }
 
-  const getCartTotal = () => {
-    return state.items.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
+  const clearCart = async () => {
+    try {
+        setCart([])
+        await cartService.clearCart()
+    } catch (error) {
+        console.error('Failed to clear cart:', error)
+    }
+  }
 
-  // L'objet value est OBLIGATOIRE pour Context.Provider
-  const value = {
-    cartItems: state.items,
-    addItem,
-    removeItem,
-    updateQuantity,
-    clearCart,
-    getCartTotal
-  };
+  const cartCount = cart.reduce((count, item) => count + item.quantity, 0)
 
   return (
-    <CartContext.Provider value={value}>
+    <CartContext.Provider
+      value={{
+        cart,
+        cartCount,
+        loading,
+        addItem,
+        updateItemQuantity,
+        removeItem,
+        clearCart
+      }}
+    >
       {children}
     </CartContext.Provider>
-  );
-};
-
-// Export uniquement le composant Provider
-export default CartProvider;
+  )
+}

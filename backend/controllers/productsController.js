@@ -25,7 +25,7 @@ export async function getById(req, res) {
 }
 
 export async function create(req, res) {
-  const payload = req.body
+  const payload = req.body;
   if (!payload) return res.status(400).json({ error: 'Missing request body' })
   try {
     const { data, error } = await supabase.from('products').insert([payload]).select().single()

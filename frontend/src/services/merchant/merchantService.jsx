@@ -1,5 +1,5 @@
 // services/merchantService.js
-import { supabase } from './supabaseClient';
+import { supabase } from '../../lib/supabaseClient';
 
 export const merchantService = {
   // Créer un vendeur et sa boutique

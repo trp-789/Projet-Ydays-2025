@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom'; // Ajoute cette import
-import { useCart } from '../hooks/useCart';
+import CartContext from '../context/CartContext';
 
 const ProductCard = ({ product }) => {
-  const { addItem } = useCart();
+  const { addItem } = useContext(CartContext);
   const navigate = useNavigate(); // Ajoute cette ligne
 
   const handleAddToCart = (e) => {
